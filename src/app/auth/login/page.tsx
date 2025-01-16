@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Login() {
   return (
-    <div className="w-full max-h-screen px-9">
+    <div className="w-full max-h-screen px-9 ">
       <h2 className="text-center mb-11 mt-8 font-bold text-xl">
         Login into your account
       </h2>

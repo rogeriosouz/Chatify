@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
+import { AuthContextProvider } from '@/context/auth-context'
+import { ProviderReactQuerry } from '@/components/provider-react-querry'
 import './globals.css'
 
 const getPoppins = Poppins({
@@ -19,7 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt_BR">
-      <body className={`${getPoppins.className} antialiased`}>{children}</body>
+      <body className={`${getPoppins.className} antialiased`}>
+        <ProviderReactQuerry>
+          <AuthContextProvider>{children}</AuthContextProvider>
+        </ProviderReactQuerry>
+      </body>
     </html>
   )
 }

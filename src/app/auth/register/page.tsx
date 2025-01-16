@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Input } from '@/components/ui/input'
+import { FormRegister } from './components/form-register'
 
 export default function Register() {
   return (
@@ -8,42 +8,8 @@ export default function Register() {
       <h2 className="text-center mb-3 mt-8 font-bold text-xl">
         Sign in and start today!
       </h2>
-      <form className="w-full">
-        <label className="block mb-4 space-y-3">
-          <p className="text-base font-normal text-muted-foreground">Name</p>
 
-          <Input type="text" placeholder="John Doe" />
-        </label>
-
-        <label className="block mb-6 space-y-3">
-          <p className="text-base font-normal text-muted-foreground">
-            Email Address
-          </p>
-          <Input type="text" placeholder="alex@email.comv" />
-        </label>
-
-        <div className="w-full mb-7">
-          <label
-            className="text-base mb-3 block font-normal text-muted-foreground"
-            htmlFor="password"
-          >
-            Password
-          </label>
-
-          <Input
-            id="password"
-            type="text"
-            placeholder="Enter your password"
-            className="mb-4"
-          />
-
-          <Input type="text" placeholder="Repeat you password" />
-        </div>
-
-        <Button type="submit" className="w-full">
-          Sign up
-        </Button>
-      </form>
+      <FormRegister />
 
       <div className="w-full flex items-center gap-3 my-8">
         <div className="w-full h-0.5 bg-muted-foreground/10"></div>

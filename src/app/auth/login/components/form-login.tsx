@@ -7,6 +7,8 @@ import { z } from 'zod'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
+import { useAuth } from '@/context/auth-context'
+import { Loader2 } from 'lucide-react'
 
 const schemaLogin = z.object({
   email: z.string().email(),
@@ -23,9 +25,10 @@ export function FormLogin() {
   } = useForm<LoginParams>({
     resolver: zodResolver(schemaLogin),
   })
+  const { signin, status } = useAuth()
 
-  function login(data: LoginParams) {
-    console.log(data)
+  function login({ email, password }: LoginParams) {
+    signin({ email, password })
   }
 
   useEffect(() => {
@@ -69,7 +72,8 @@ export function FormLogin() {
         Forgot Password?
       </Link>
 
-      <Button type="submit" className="w-full">
+      <Button disabled={status === 'pending'} type="submit" className="w-full">
+        {status === 'pending' && <Loader2 className="size-5 animate-spin" />}
         Login Now
       </Button>
     </form>
