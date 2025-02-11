@@ -1,6 +1,6 @@
 export const APP_ROUTER = {
   private: {
-    home: '/',
+    chats: '/chats',
   },
 
   auth: {
@@ -29,5 +29,8 @@ export function getAllRoutersMiddleware(): string[] {
     Object.values(APP_ROUTER.auth),
   )
 
-  return allRouter
+  return [
+    ...allRouter,
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+  ]
 }

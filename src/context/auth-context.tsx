@@ -40,6 +40,8 @@ type AuthContextType = {
 const UseAuthContext = createContext({} as AuthContextType)
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const [user, setUser] = useState<null | User>(null)
   const [status, setStatus] = useState<
     'pending' | 'success' | 'error' | 'idle'

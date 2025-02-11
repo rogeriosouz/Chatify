@@ -9,8 +9,14 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('refreshToken')
 
   const signinUrl = new URL('/auth/login', request.url)
-  const homeUrl = new URL('/', request.url)
+  const chatsUrl = new URL('/chats', request.url)
   const routerType = routersType(request.nextUrl.pathname)
+
+  if (request.nextUrl.pathname === '/' && token) {
+    const response = NextResponse.redirect(chatsUrl)
+
+    return response
+  }
 
   if (routerType === 'private' && !token) {
     const response = NextResponse.redirect(signinUrl)
@@ -19,7 +25,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (routerType === 'auth' && token) {
-    const response = NextResponse.redirect(homeUrl)
+    const response = NextResponse.redirect(chatsUrl)
 
     return response
   }
