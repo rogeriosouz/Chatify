@@ -1,6 +1,6 @@
 import { UsersSocketProvider } from '@/context/users-socket'
-import { ListFriends } from '../components/list-friends'
 import { Header } from './components/header'
+import { ListFriends } from './components/list-friends'
 
 export default function ChatLayout({
   children,

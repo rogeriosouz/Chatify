@@ -18,6 +18,7 @@ import { ZodError } from 'zod'
 export type User = {
   id: string
   email: string
+  name: string
 }
 
 export type JwtResponse = {
@@ -60,6 +61,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       setUser({
         id: user.id,
         email: user.email,
+        name: user.name,
       })
     }
   }, [])
@@ -81,6 +83,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       setUser({
         id: data.user.id,
         email: data.user.email,
+        name: data.user.name,
       })
 
       const { exp } = decode(data.token) as JwtResponse
