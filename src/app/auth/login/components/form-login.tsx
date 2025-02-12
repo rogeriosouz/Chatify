@@ -9,7 +9,6 @@ import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useAuth } from '@/context/auth-context'
 import { Loader2 } from 'lucide-react'
-import { useSocket } from '@/context/users-socket'
 
 const schemaLogin = z.object({
   email: z.string().email(),
@@ -26,18 +25,18 @@ export function FormLogin() {
   } = useForm<LoginParams>({
     resolver: zodResolver(schemaLogin),
   })
-  const { signin, status, user } = useAuth()
-  const { connectSocket } = useSocket()
+  const { signin, status } = useAuth()
+  // const { connectSocket } = useSocket()
 
   function login({ email, password }: LoginParams) {
     signin({ email, password })
   }
 
-  useEffect(() => {
-    if (status === 'success' && user) {
-      connectSocket(user?.id)
-    }
-  }, [status])
+  // useEffect(() => {
+  //   if (status === 'success' && user?.id) {
+  //     connectSocket(user?.id)
+  //   }
+  // }, [connectSocket, status, user])
 
   useEffect(() => {
     if (errors.email || errors.password) {

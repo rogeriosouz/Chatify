@@ -78,7 +78,7 @@ api.interceptors.response.use(
         return api(originalRequest)
       } catch (refreshError) {
         deleteCookie('auth-token:front-token')
-        deleteCookie('refresh-token')
+        deleteCookie('refreshToken')
 
         window.location.href = '/auth/login'
 

@@ -1,7 +1,8 @@
 'use client'
+import { deleteCookieServer } from '@/actions/deleteCookieServer'
 import { login } from '@/api/login'
 import { api } from '@/lib/api'
-import { getCookie, setCookie } from 'cookies-next'
+import { deleteCookie, getCookie, setCookie } from 'cookies-next'
 import { decode } from 'jsonwebtoken'
 import { useRouter } from 'next/navigation'
 import {
@@ -28,6 +29,7 @@ type AuthContextType = {
   user: null | User
   status: 'pending' | 'success' | 'error' | 'idle'
   isAuthenticated: boolean
+  logout: () => void
   signin: ({
     email,
     password,
@@ -106,6 +108,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         setStatus('success')
       }, 1000)
     } catch (error) {
+      console.log(error)
       setStatus('error')
       const err = error as {
         response: { data: { statusCode: number; message: string } }
@@ -124,6 +127,15 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function logout() {
+    if (user) {
+      deleteCookie('auth-token:front-token')
+      deleteCookieServer('refreshToken')
+
+      push('/auth/login')
+    }
+  }
+
   const isAuthenticated = !!user
 
   const values = {
@@ -131,6 +143,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     signin,
     status,
     isAuthenticated,
+    logout,
   }
 
   return (

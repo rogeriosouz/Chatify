@@ -18,6 +18,12 @@ export function middleware(request: NextRequest) {
     return response
   }
 
+  if (request.nextUrl.pathname.includes('/chats') && !token) {
+    const response = NextResponse.redirect(signinUrl)
+
+    return response
+  }
+
   if (routerType === 'private' && !token) {
     const response = NextResponse.redirect(signinUrl)
 
