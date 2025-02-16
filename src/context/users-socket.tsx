@@ -13,6 +13,12 @@ interface UsersSocketContextType {
   connectSocket: (userId: string) => void
   disconnectSocket: () => void
   usersOnline: string[] | null
+  notificationNewMessage:
+    | {
+        userId: string
+        nameUser: string
+      }[]
+    | null
   newMessages: {
     id: string
     userId: string
@@ -24,10 +30,12 @@ interface UsersSocketContextType {
     recipientId,
     message,
     chatId,
+    nameUser,
   }: {
     recipientId: string
     message: string
     chatId: string
+    nameUser: string
   }) => void
 }
 
@@ -44,6 +52,14 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     createdAt: string
     chatId: string
   } | null>(null)
+
+  const [notificationNewMessage, setNotificationNewMessage] = useState<
+    | null
+    | {
+        userId: string
+        nameUser: string
+      }[]
+  >(null)
 
   useEffect(() => {
     const usersOnlineLocalhost = localStorage.getItem('usersOnline')
@@ -67,12 +83,14 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     recipientId,
     message,
     chatId,
+    nameUser,
   }: {
     recipientId: string
     message: string
     chatId: string
+    nameUser: string
   }) {
-    socket?.send(JSON.stringify({ recipientId, chatId, message }))
+    socket?.send(JSON.stringify({ recipientId, chatId, nameUser, message }))
   }
 
   function disconnectSocket() {
@@ -92,9 +110,10 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         message: string
         users?: string[]
         chatId: string
+        nameUser?: string
       }
 
-      if (data.action === 'newMessageChat') {
+      if (data.action === 'messageChat') {
         if (data.recipientId === user?.id) {
           setNewMessages({
             id: 'id provisório',
@@ -103,6 +122,27 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
             createdAt: new Date().toString(),
             chatId: data.chatId,
           })
+        }
+      }
+
+      if (data.action === 'newMessageChat') {
+        if (data.recipientId === user?.id) {
+          setNotificationNewMessage(
+            notificationNewMessage
+              ? [
+                  ...notificationNewMessage,
+                  {
+                    userId: data.userId,
+                    nameUser: data.nameUser as string,
+                  },
+                ]
+              : [
+                  {
+                    userId: data.userId,
+                    nameUser: data.nameUser as string,
+                  },
+                ],
+          )
         }
       }
 
@@ -119,6 +159,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     disconnectSocket,
     sendMessage,
     newMessages,
+    notificationNewMessage,
   }
 
   return (

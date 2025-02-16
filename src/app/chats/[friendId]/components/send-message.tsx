@@ -7,11 +7,12 @@ import { Loader2, Send } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { ListChatType } from '../page'
 import { useParams } from 'next/navigation'
-import { Input } from '@/components/ui/input'
 import { useMutation } from '@tanstack/react-query'
 import { createMessageChat } from '@/api/messages-chat/create-messages-chat'
+import { Textarea } from '@/components/ui/textarea'
+import { ListChatType } from './chat'
+import { useAuth } from '@/context/auth-context'
 
 const sendMessageSchema = z.object({
   message: z.string().min(1),
@@ -21,12 +22,11 @@ type SendMessage = z.infer<typeof sendMessageSchema>
 
 interface SendMessageProps {
   chatId: string
-  focusLastMessage: () => void
 }
 export function SendMessage({ chatId }: SendMessageProps) {
   const { friendId } = useParams<{ friendId: string }>()
   const { sendMessage, newMessages } = useSocket()
-
+  const { user } = useAuth()
   const { register, handleSubmit, reset } = useForm<SendMessage>({
     resolver: zodResolver(sendMessageSchema),
   })
@@ -35,6 +35,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
     mutationFn: createMessageChat,
     onSuccess: (_, { chatId, message }) => {
       sendMessage({
+        nameUser: user?.name as string,
         message,
         recipientId: friendId,
         chatId,
@@ -84,20 +85,18 @@ export function SendMessage({ chatId }: SendMessageProps) {
   return (
     <form
       onSubmit={handleSubmit(handleSendMessage)}
-      className="w-full flex h-[50px] items-center px-4 gap-2"
+      className="w-full flex py-3 bg-white border-t absolute z-[99999999999] bottom-0 items-center px-4 gap-2"
     >
-      <Input
-        type="text"
-        className="w-full h-[50px]"
+      <Textarea
+        className="w-full resize-none h-[50px]"
         placeholder="Enviar mensagem"
         {...register('message')}
-        disabled={isPending}
       />
       <Button
         disabled={isPending}
         type="submit"
-        variant={'default'}
         className="!h-[50px]"
+        variant={'default'}
       >
         {isPending ? (
           <Loader2 className="size-4 animate-spin" />
