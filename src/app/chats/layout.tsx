@@ -1,6 +1,7 @@
 import { UsersSocketProvider } from '@/context/users-socket'
 import { Header } from './components/header'
 import { ListFriends } from './components/list-friends'
+import { Toaster } from '@/components/ui/sonner'
 
 export default function ChatLayout({
   children,
@@ -18,6 +19,8 @@ export default function ChatLayout({
           <div className="w-full flex">{children}</div>
         </div>
       </div>
+
+      <Toaster position="top-center" />
     </UsersSocketProvider>
   )
 }

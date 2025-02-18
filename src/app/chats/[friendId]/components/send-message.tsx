@@ -64,15 +64,17 @@ export function SendMessage({ chatId }: SendMessageProps) {
 
     if (newMessages) {
       if (newMessages.chatId === chatId) {
+        console.log(newMessages)
+        console.log(chatId)
         querryClient.setQueryData<ListChatType>(['/list-chat', friendId], {
           ...listChat,
           messages: [
             ...listChat.messages,
             {
               id: newMessages.id,
-              userId: newMessages?.userId,
-              message: newMessages?.message,
-              createdAt: newMessages?.createdAt,
+              userId: newMessages.userId,
+              message: newMessages.message,
+              createdAt: newMessages.createdAt,
             },
           ],
         })
@@ -85,7 +87,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
   return (
     <form
       onSubmit={handleSubmit(handleSendMessage)}
-      className="w-full flex py-3 bg-white border-t absolute z-[99999999999] bottom-0 items-center px-4 gap-2"
+      className="w-full flex py-3 bg-white border-t  items-center px-4 gap-2"
     >
       <Textarea
         className="w-full resize-none h-[50px]"

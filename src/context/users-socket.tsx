@@ -19,6 +19,7 @@ interface UsersSocketContextType {
         nameUser: string
       }[]
     | null
+
   newMessages: {
     id: string
     userId: string
@@ -113,15 +114,15 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         nameUser?: string
       }
 
-      if (data.action === 'messageChat') {
+      if (data.action === 'newMessageChat') {
         if (data.recipientId === user?.id) {
-          setNewMessages({
+          setNewMessages(() => ({
             id: 'id provisório',
             userId: data.userId,
             message: data.message,
             createdAt: new Date().toString(),
             chatId: data.chatId,
-          })
+          }))
         }
       }
 
