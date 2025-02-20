@@ -26,17 +26,10 @@ export function FormLogin() {
     resolver: zodResolver(schemaLogin),
   })
   const { signin, status } = useAuth()
-  // const { connectSocket } = useSocket()
 
   function login({ email, password }: LoginParams) {
     signin({ email, password })
   }
-
-  // useEffect(() => {
-  //   if (status === 'success' && user?.id) {
-  //     connectSocket(user?.id)
-  //   }
-  // }, [connectSocket, status, user])
 
   useEffect(() => {
     if (errors.email || errors.password) {

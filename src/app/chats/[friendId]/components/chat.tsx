@@ -73,39 +73,37 @@ export function Chat() {
 
           <div className="w-full h-full flex flex-col">
             <div className="space-y-20 flex-1 p-10 scroll-smooths overflow-auto">
-              <>
-                {data?.messages.map((message, index) => (
+              {data?.messages.map((message, index) => (
+                <div
+                  key={index}
+                  ref={
+                    index === data.messages.length - 1 ? lastMessageRef : null
+                  }
+                >
                   <div
-                    key={index}
-                    ref={
-                      index === data.messages.length - 1 ? lastMessageRef : null
-                    }
+                    className={clsx('flex items-center gap-2', {
+                      'justify-end': message.userId === user?.id,
+                    })}
                   >
-                    <div
-                      className={clsx('flex items-center gap-2', {
-                        'justify-end': message.userId === user?.id,
-                      })}
-                    >
-                      {message.userId !== user?.id && (
-                        <div className="min-w-12 min-h-12 rounded-full bg-primary"></div>
-                      )}
+                    {message.userId !== user?.id && (
+                      <div className="min-w-12 min-h-12 rounded-full bg-primary"></div>
+                    )}
 
-                      <div>
-                        <div className="px-3 py-1 bg-secondary rounded">
-                          <p>{message.message}</p>
-                        </div>
-                        <span className="text-[10px] font-normal pl-0.5 text-muted-foreground">
-                          {formatDate(message.createdAt)}
-                        </span>
+                    <div>
+                      <div className="px-3 py-1 bg-secondary rounded">
+                        <p>{message.message}</p>
                       </div>
-
-                      {message.userId === user?.id && (
-                        <div className="min-w-12 min-h-12 rounded-full bg-primary"></div>
-                      )}
+                      <span className="text-[10px] font-normal pl-0.5 text-muted-foreground">
+                        {formatDate(message.createdAt)}
+                      </span>
                     </div>
+
+                    {message.userId === user?.id && (
+                      <div className="min-w-12 min-h-12 rounded-full bg-primary"></div>
+                    )}
                   </div>
-                ))}
-              </>
+                </div>
+              ))}
             </div>
 
             <SendMessage chatId={data.chatId} />

@@ -28,6 +28,11 @@ export function RefuseFriend({ friendId }: RefuseFriendProps) {
         queryKey: ['/friends-request'],
         type: 'all',
       })
+      querryClient.invalidateQueries({
+        queryKey: ['/friends'],
+        type: 'all',
+      })
+
       toast.success(message, {
         className: '!w-[400px] !h-[70px] !bg-green-500 !text-black',
       })

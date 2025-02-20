@@ -52,19 +52,17 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   const { push } = useRouter()
 
+  const token = getCookie('auth-token:front-token')
   useEffect(() => {
-    const token = getCookie('auth-token:front-token')
-
     if (token) {
       const { user } = decode(token as string) as JwtResponse
-
       setUser({
         id: user.id,
         email: user.email,
         name: user.name,
       })
     }
-  }, [])
+  }, [token])
 
   async function signin({
     email,
@@ -132,6 +130,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     if (user) {
+      localStorage.setItem('usersOnline', JSON.stringify([]))
       deleteCookie('auth-token:front-token')
       deleteCookieServer('refreshToken')
 

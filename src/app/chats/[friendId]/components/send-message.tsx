@@ -64,8 +64,6 @@ export function SendMessage({ chatId }: SendMessageProps) {
 
     if (newMessages) {
       if (newMessages.chatId === chatId) {
-        console.log(newMessages)
-        console.log(chatId)
         querryClient.setQueryData<ListChatType>(['/list-chat', friendId], {
           ...listChat,
           messages: [

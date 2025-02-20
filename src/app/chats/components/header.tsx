@@ -14,7 +14,12 @@ import { useEffect, useState } from 'react'
 export function Header() {
   const { logout, user } = useAuth()
   const [openNotification, setOpenNotification] = useState(false)
-  const { disconnectSocket, notificationNewMessage } = useSocket()
+  const {
+    disconnectSocket,
+    notificationNewMessage,
+    notificationNewFriendsRequest,
+    notificationAcceptedFriend,
+  } = useSocket()
 
   function logoutFn() {
     disconnectSocket()
@@ -24,7 +29,11 @@ export function Header() {
     if (notificationNewMessage) {
       setOpenNotification(true)
     }
-  }, [notificationNewMessage])
+
+    if (notificationNewFriendsRequest) {
+      setOpenNotification(true)
+    }
+  }, [notificationNewMessage, notificationNewFriendsRequest])
 
   return (
     <header className="w-full bg-secondary h-[8vh] flex items-center justify-between px-40 xl:px-5">
@@ -53,7 +62,37 @@ export function Header() {
               </Button>
             </PopoverTrigger>
             <PopoverContent>
-              {notificationNewMessage ? (
+              {notificationAcceptedFriend && (
+                <div className="w-full flex items-center gap-2">
+                  <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
+
+                  <div>
+                    <h3 className="text-sm capitalize font-bold text-primary">
+                      {notificationAcceptedFriend.nameUser}
+                    </h3>
+                    <span className="text-xs font-normal">
+                      Aceitou sua solicitação de amizade, agora vocês são amigos
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {notificationNewFriendsRequest && (
+                <div className="w-full flex items-center gap-2">
+                  <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
+
+                  <div>
+                    <h3 className="text-sm capitalize font-bold text-primary">
+                      {notificationNewFriendsRequest.nameUser}
+                    </h3>
+                    <span className="text-xs font-normal">
+                      Te pediu em amizade
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {notificationNewMessage && (
                 <>
                   {notificationNewMessage.map((newMessage, index) => (
                     <div key={index} className="w-full flex items-center gap-2">
@@ -77,9 +116,13 @@ export function Header() {
                     </div>
                   ))}
                 </>
-              ) : (
-                'Nenhuma nova mensagem para você'
               )}
+
+              {!notificationNewFriendsRequest &&
+                !notificationNewMessage &&
+                !notificationAcceptedFriend && (
+                  <p>Nenhuma nova mensagem para você</p>
+                )}
             </PopoverContent>
           </Popover>
         </div>

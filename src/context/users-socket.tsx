@@ -7,6 +7,8 @@ import {
   useState,
 } from 'react'
 import { useAuth } from './auth-context'
+import { querryClient } from '@/lib/react-querry'
+import { useParams } from 'next/navigation'
 
 interface UsersSocketContextType {
   socket: WebSocket | null
@@ -19,7 +21,13 @@ interface UsersSocketContextType {
         nameUser: string
       }[]
     | null
-
+  notificationAcceptedFriend: {
+    nameUser: string
+  } | null
+  notificationNewFriendsRequest: {
+    userId: string
+    nameUser: string
+  } | null
   newMessages: {
     id: string
     userId: string
@@ -27,6 +35,20 @@ interface UsersSocketContextType {
     createdAt: string
     chatId: string
   } | null
+  sendAcceptedFriend: ({
+    recipientId,
+    name,
+  }: {
+    recipientId: string
+    name: string
+  }) => void
+  sendRequestFriend: ({
+    recipientId,
+    name,
+  }: {
+    recipientId: string
+    name: string
+  }) => void
   sendMessage: ({
     recipientId,
     message,
@@ -53,6 +75,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     createdAt: string
     chatId: string
   } | null>(null)
+  const { friendId } = useParams()
 
   const [notificationNewMessage, setNotificationNewMessage] = useState<
     | null
@@ -61,6 +84,16 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         nameUser: string
       }[]
   >(null)
+
+  const [notificationNewFriendsRequest, setNotificationNewFriendsRequest] =
+    useState<{
+      userId: string
+      nameUser: string
+    } | null>(null)
+
+  const [notificationAcceptedFriend, setNotificationAcceptedFriend] = useState<{
+    nameUser: string
+  } | null>(null)
 
   useEffect(() => {
     const usersOnlineLocalhost = localStorage.getItem('usersOnline')
@@ -91,12 +124,55 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     chatId: string
     nameUser: string
   }) {
-    socket?.send(JSON.stringify({ recipientId, chatId, nameUser, message }))
+    socket?.send(
+      JSON.stringify({
+        recipientId,
+        action: 'messageChat',
+        chatId,
+        nameUser,
+        message,
+      }),
+    )
   }
 
-  function disconnectSocket() {
-    socket?.close()
+  function sendRequestFriend({
+    recipientId,
+    name,
+  }: {
+    recipientId: string
+    name: string
+  }) {
+    socket?.send(
+      JSON.stringify({
+        recipientId,
+        nameUser: name,
+        userId: user?.id,
+        action: 'requestFriend',
+      }),
+    )
   }
+
+  function sendAcceptedFriend({
+    recipientId,
+    name,
+  }: {
+    recipientId: string
+    name: string
+  }) {
+    socket?.send(
+      JSON.stringify({
+        recipientId,
+        action: 'acceptedFriend',
+        nameUser: name,
+      }),
+    )
+  }
+
+  useEffect(() => {
+    if (newMessages && !friendId) {
+      setNewMessages(null)
+    }
+  }, [newMessages, friendId])
 
   function connectSocket(userId: string) {
     const socket = new WebSocket(`ws://localhost:3333/chats/ws/${userId}`)
@@ -114,43 +190,78 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         nameUser?: string
       }
 
-      if (data.action === 'newMessageChat') {
-        if (data.recipientId === user?.id) {
-          setNewMessages(() => ({
-            id: 'id provisório',
-            userId: data.userId,
-            message: data.message,
-            createdAt: new Date().toString(),
-            chatId: data.chatId,
-          }))
-        }
-      }
+      switch (data.action) {
+        case 'messageChat':
+          if (data.recipientId === user?.id) {
+            setNewMessages({
+              id: 'id provisório',
+              userId: data.userId,
+              message: data.message,
+              createdAt: new Date().toString(),
+              chatId: data.chatId,
+            })
+          }
 
-      if (data.action === 'newMessageChat') {
-        if (data.recipientId === user?.id) {
-          setNotificationNewMessage(
-            notificationNewMessage
-              ? [
-                  ...notificationNewMessage,
-                  {
-                    userId: data.userId,
-                    nameUser: data.nameUser as string,
-                  },
-                ]
-              : [
-                  {
-                    userId: data.userId,
-                    nameUser: data.nameUser as string,
-                  },
-                ],
-          )
-        }
-      }
+          break
+        case 'newMessageChat':
+          if (data.recipientId === user?.id) {
+            setNotificationNewMessage(
+              notificationNewMessage
+                ? [
+                    ...notificationNewMessage,
+                    {
+                      userId: data.userId,
+                      nameUser: data.nameUser as string,
+                    },
+                  ]
+                : [
+                    {
+                      userId: data.userId,
+                      nameUser: data.nameUser as string,
+                    },
+                  ],
+            )
+          }
 
-      if (data.action === 'connectedUsers' && data.users) {
-        setUsersOnline(data.users)
+          break
+        case 'requestFriend':
+          if (data.recipientId === user?.id) {
+            setNotificationNewFriendsRequest({
+              nameUser: data.nameUser as string,
+              userId: data.userId,
+            })
+
+            querryClient.invalidateQueries({
+              queryKey: ['/friends-request'],
+              type: 'all',
+            })
+          }
+
+          break
+        case 'acceptedFriend':
+          if (data.recipientId === user?.id) {
+            querryClient.invalidateQueries({
+              queryKey: ['/friends'],
+              type: 'all',
+            })
+
+            setNotificationAcceptedFriend({
+              nameUser: data.nameUser as string,
+            })
+          }
+          break
+        case 'connectedUsers':
+          if (data.users) {
+            setUsersOnline(data.users)
+          }
+
+          break
       }
     }
+  }
+
+  function disconnectSocket() {
+    socket?.close()
   }
 
   const values = {
@@ -161,6 +272,10 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     sendMessage,
     newMessages,
     notificationNewMessage,
+    sendRequestFriend,
+    notificationNewFriendsRequest,
+    sendAcceptedFriend,
+    notificationAcceptedFriend,
   }
 
   return (

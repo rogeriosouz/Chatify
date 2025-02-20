@@ -10,8 +10,10 @@ import {
   friendsRequest,
   FriendsRequesType,
 } from '@/api/friends/friends-request'
+import { Users } from '@phosphor-icons/react'
 import { AcceptFriend } from './accept-friend'
 import { RefuseFriend } from './refuse-friend'
+import { useCallback } from 'react'
 
 export function ListFriends() {
   const { data, status } = useQuery<{
@@ -28,29 +30,26 @@ export function ListFriends() {
     })
 
   const { usersOnline } = useSocket()
-  // const { user } = useAuth()
   const { friendId } = useParams()
 
-  function friendsOnline() {
+  const friendsOnline = useCallback(() => {
     // eslint-disable-next-line array-callback-return
-    const friendsOnline = data?.friends.map((friend) => {
-      if (usersOnline?.includes(friend.id)) {
-        return friend
-      }
-    })
+    const friendsOnline = data?.friends.filter((friend) =>
+      usersOnline?.includes(friend.id),
+    )
+
+    if (!friendsOnline) {
+      return 0
+    }
 
     return friendsOnline?.length
-  }
-
-  /* {usersOnline?.filter((usersOnline) => usersOnline !== user?.id)
-            ? usersOnline?.filter((usersOnline) => usersOnline !== user?.id)
-                .length
-            : 0} */
+  }, [data?.friends, usersOnline])
 
   return (
     <div className="bg-secondary border-r h-[660px] overflow-auto">
       <div className="p-5">
         <div className="flex items-center gap-2">
+          <Users className="size-10 text-primary" weight="fill" />
           <h2 className="text-base font-bold text-primary">Amigos</h2>
           <AddFriends />
         </div>
@@ -59,8 +58,38 @@ export function ListFriends() {
         </span>
       </div>
 
+      {status === 'pending' && (
+        <div className="mb-5">
+          <div className="w-full transition-all justify-between flex items-center py-2 px-5">
+            <div className="flex items-center gap-2">
+              <div className="size-12 rounded-full bg-zinc-900/10 animate-pulse relative"></div>
+              <div className="space-y-0.5">
+                <div className="w-[100px] h-2 bg-zinc-900/10 animate-pulse"></div>
+                <div className="w-[50px] h-2 bg-zinc-900/10 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full transition-all justify-between flex items-center py-2 px-5">
+            <div className="flex items-center gap-2">
+              <div className="size-12 rounded-full bg-zinc-900/10 animate-pulse relative"></div>
+              <div className="space-y-0.5">
+                <div className="w-[100px] h-2 bg-zinc-900/10 animate-pulse"></div>
+                <div className="w-[50px] h-2 bg-zinc-900/10 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {status === 'success' && (
         <div className="mb-5">
+          {data.friends.length <= 0 && (
+            <p className="text-sm font-medium px-5 text-primary">
+              !Você não possui amigos.
+            </p>
+          )}
+
           {data?.friends.map((friend) => (
             <Link
               key={friend.id}
@@ -87,6 +116,25 @@ export function ListFriends() {
               </div>
             </Link>
           ))}
+        </div>
+      )}
+
+      {statusFriendsRequest === 'pending' && (
+        <div>
+          <div className="px-5 mb-2 space-y-0.5">
+            <div className="w-[120px] h-2 bg-zinc-900/10 animate-pulse"></div>
+            <div className="w-[50px] h-2 bg-zinc-900/10 animate-pulse"></div>
+          </div>
+
+          <div className="w-full transition-all justify-between flex items-center py-2 px-5">
+            <div className="flex items-center gap-2">
+              <div className="size-12 rounded-full bg-zinc-900/10 animate-pulse relative"></div>
+              <div className="space-y-0.5">
+                <div className="w-[100px] h-2 bg-zinc-900/10 animate-pulse"></div>
+                <div className="w-[50px] h-2 bg-zinc-900/10 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
