@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/popover'
 import { useAuth } from '@/context/auth-context'
 import { useSocket } from '@/context/users-socket'
+import clsx from 'clsx'
 import { Bell, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -61,9 +62,9 @@ export function Header() {
                 <Bell className="size-5" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent>
+            <PopoverContent className="w-[350px] !p-0">
               {notificationAcceptedFriend && (
-                <div className="w-full flex items-center gap-2">
+                <div className="w-full flex items-center gap-2 border-y p-4">
                   <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
 
                   <div>
@@ -78,7 +79,7 @@ export function Header() {
               )}
 
               {notificationNewFriendsRequest && (
-                <div className="w-full flex items-center gap-2">
+                <div className="w-full flex items-center gap-2 border-y p-4 ">
                   <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
 
                   <div>
@@ -95,7 +96,17 @@ export function Header() {
               {notificationNewMessage && (
                 <>
                   {notificationNewMessage.map((newMessage, index) => (
-                    <div key={index} className="w-full flex items-center gap-2">
+                    <div
+                      key={index}
+                      className={clsx('w-full flex items-center gap-2 p-4 ', {
+                        'border-b':
+                          notificationAcceptedFriend ||
+                          notificationNewFriendsRequest,
+                        'border-y':
+                          !notificationAcceptedFriend &&
+                          !notificationNewFriendsRequest,
+                      })}
+                    >
                       <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
 
                       <div>
