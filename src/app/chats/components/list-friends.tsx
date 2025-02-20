@@ -46,7 +46,7 @@ export function ListFriends() {
   }, [data?.friends, usersOnline])
 
   return (
-    <div className="bg-secondary border-r h-[660px] overflow-auto">
+    <div className="bg-secondary border-r lg:hidden h-[660px] overflow-auto">
       <div className="p-5">
         <div className="flex items-center gap-2">
           <Users className="size-10 text-primary" weight="fill" />

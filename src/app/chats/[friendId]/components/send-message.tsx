@@ -85,7 +85,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
   return (
     <form
       onSubmit={handleSubmit(handleSendMessage)}
-      className="w-full flex py-3 bg-white border-t  items-center px-4 gap-2"
+      className="w-full flex py-3 bg-white border-t  items-center px-10 lg:px-4 gap-2"
     >
       <Textarea
         className="w-full resize-none h-[50px]"

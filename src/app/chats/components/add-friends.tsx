@@ -126,6 +126,13 @@ export function AddFriends() {
     }
   }, [errors])
 
+  useEffect(() => {
+    if (!openAddFriends) {
+      reset()
+      getFriendMutation.reset()
+    }
+  }, [openAddFriends])
+
   return (
     <Dialog
       open={openAddFriends}

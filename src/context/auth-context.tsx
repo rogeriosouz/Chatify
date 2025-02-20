@@ -52,8 +52,9 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   const { push } = useRouter()
 
-  const token = getCookie('auth-token:front-token')
   useEffect(() => {
+    const token = getCookie('auth-token:front-token')
+
     if (token) {
       const { user } = decode(token as string) as JwtResponse
       setUser({
@@ -62,7 +63,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         name: user.name,
       })
     }
-  }, [token])
+  }, [])
 
   async function signin({
     email,
