@@ -52,8 +52,8 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
 
   return (
     <div
-      className={clsx('bg-secondary h-full overflow-auto', {
-        'lg:hidden border-r ': !isMobile,
+      className={clsx('bg-secondary  h-full overflow-auto', {
+        'lg:hidden border-r': !isMobile,
         'w-full': isMobile,
       })}
     >

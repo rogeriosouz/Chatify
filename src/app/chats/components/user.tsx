@@ -7,8 +7,8 @@ export function User() {
   const { user, logout } = useAuth()
 
   return (
-    <div className="w-full my-12 space-y-12 px-4">
-      <div className="w-full flex items-center justify-end gap-2">
+    <div className="w-full  space-y-12 ">
+      <div className="w-full h-[65px] px-4 border-b flex items-center justify-between gap-2">
         <Notification />
 
         <Button

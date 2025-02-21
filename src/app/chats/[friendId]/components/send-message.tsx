@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { useSocket } from '@/context/users-socket'
 import { querryClient } from '@/lib/react-querry'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, Send } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,6 +13,7 @@ import { createMessageChat } from '@/api/messages-chat/create-messages-chat'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/context/auth-context'
 import { ListChatType } from '@/context/chat-context'
+import { PaperPlaneRight } from '@phosphor-icons/react'
 
 const sendMessageSchema = z.object({
   message: z.string().min(1),
@@ -85,7 +86,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
   return (
     <form
       onSubmit={handleSubmit(handleSendMessage)}
-      className="w-full flex py-3 bg-white border-t items-center px-10 lg:px-4 gap-2"
+      className="w-full flex py-3 border-t items-center px-10 lg:px-4 gap-2"
     >
       <Textarea
         className="w-full resize-none h-[50px]"
@@ -101,7 +102,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
         {isPending ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (
-          <Send className="size-4" />
+          <PaperPlaneRight className="size-4" weight="fill" />
         )}
       </Button>
     </form>

@@ -10,7 +10,7 @@ export function HeaderChat({ userName }: HeaderChatPops) {
   const { usersOnline } = useSocket()
 
   return (
-    <div className="w-full py-2 lg:hidden px-4 justify-between bg-neutral-100/50 flex items-center">
+    <header className="w-full py-2 lg:hidden border-b px-4 justify-between bg-neutral-100/50 flex items-center">
       <div className="flex items-center gap-2">
         <div className="size-12 rounded-full bg-primary"></div>
         <div className="space-y-0.5">
@@ -22,6 +22,6 @@ export function HeaderChat({ userName }: HeaderChatPops) {
           </p>
         </div>
       </div>
-    </div>
+    </header>
   )
 }

@@ -30,40 +30,34 @@ export function Chat() {
   return (
     <>
       {statusQuerry === 'success' && data && (
-        <div className="h-full w-full">
+        <div className="w-full h-screen flex flex-col">
           <HeaderChat userName={data.friend.name} />
 
-          <div className="w-full h-[92vh] flex flex-col">
-            <div className="space-y-6 flex-grow p-10 lg:px-4 scroll-smooths overflow-auto">
-              {data.messages.map((message, index) => (
-                <div
-                  key={index}
-                  ref={
-                    index === data.messages.length - 1 ? lastMessageRef : null
-                  }
-                >
-                  {(index === 0 ||
-                    new Date(message.createdAt).getDay() !==
-                      new Date(
-                        data.messages[index - 1].createdAt,
-                      ).getDay()) && (
-                    <div className="flex items-center my-10 justify-center">
-                      <span className="text-sm bg-secondary rounded px-4 py-0.5 font-normal">
-                        {formatDateDay(message.createdAt)}
-                      </span>
-                    </div>
-                  )}
+          <div className="space-y-6 flex-grow p-10 lg:px-4 scroll-smooths overflow-auto">
+            {data.messages.map((message, index) => (
+              <div
+                key={index}
+                ref={index === data.messages.length - 1 ? lastMessageRef : null}
+              >
+                {(index === 0 ||
+                  new Date(message.createdAt).getDay() !==
+                    new Date(data.messages[index - 1].createdAt).getDay()) && (
+                  <div className="flex items-center my-10 justify-center">
+                    <span className="text-sm bg-secondary rounded px-4 py-0.5 font-normal">
+                      {formatDateDay(message.createdAt)}
+                    </span>
+                  </div>
+                )}
 
-                  <Message
-                    message={message.message}
-                    userId={message.userId}
-                    createdAt={message.createdAt}
-                  />
-                </div>
-              ))}
-            </div>
-            <SendMessage chatId={data.chatId} />
+                <Message
+                  message={message.message}
+                  userId={message.userId}
+                  createdAt={message.createdAt}
+                />
+              </div>
+            ))}
           </div>
+          <SendMessage chatId={data.chatId} />
         </div>
       )}
     </>
