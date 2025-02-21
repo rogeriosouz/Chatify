@@ -1,5 +1,6 @@
 import { useChat } from '@/context/chat-context'
 import { useSocket } from '@/context/users-socket'
+import { MobileListFriends } from './mobile-list-friends'
 
 export function FriendCardChat() {
   const { statusQuerry, data } = useChat()
@@ -7,6 +8,8 @@ export function FriendCardChat() {
 
   return (
     <div className="items-center gap-2 hidden lg:flex">
+      <MobileListFriends />
+
       <div className="size-12 rounded-full bg-primary relative">
         <div className="absolute top-[70%] left-[70%] size-4 bg-green-500 rounded-full"></div>
       </div>

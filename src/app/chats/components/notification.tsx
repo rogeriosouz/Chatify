@@ -41,7 +41,7 @@ export function Notification() {
       onOpenChange={(value) => setOpenNotification(value)}
     >
       <PopoverTrigger asChild>
-        <Button variant={'default'} className="h-[40px]">
+        <Button variant={'default'} className="h-[40px] lg:hidden">
           <Bell className="size-5" />
         </Button>
       </PopoverTrigger>

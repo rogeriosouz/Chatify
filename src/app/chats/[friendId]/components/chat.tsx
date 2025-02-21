@@ -4,6 +4,7 @@ import { SendMessage } from './send-message'
 import { HeaderChat } from './header-chat'
 import { Message } from './message'
 import { useChat } from '@/context/chat-context'
+import { formatDateDay } from '@/utils/format-date-day'
 
 export function Chat() {
   const lastMessageRef = useRef<HTMLDivElement | null>(null)
@@ -25,14 +26,14 @@ export function Chat() {
 
     return () => clearTimeout(timeout)
   }, [data?.messages])
-
+  // h-[585px] lg:
   return (
     <>
       {statusQuerry === 'success' && data && (
-        <div className="h-[585px] lg:h-[92vh] w-full">
+        <div className="h-full w-full">
           <HeaderChat userName={data.friend.name} />
 
-          <div className="w-full h-full flex flex-col">
+          <div className="w-full h-[92vh] flex flex-col">
             <div className="space-y-6 flex-grow p-10 lg:px-4 scroll-smooths overflow-auto">
               {data.messages.map((message, index) => (
                 <div
@@ -41,6 +42,18 @@ export function Chat() {
                     index === data.messages.length - 1 ? lastMessageRef : null
                   }
                 >
+                  {(index === 0 ||
+                    new Date(message.createdAt).getDay() !==
+                      new Date(
+                        data.messages[index - 1].createdAt,
+                      ).getDay()) && (
+                    <div className="flex items-center my-10 justify-center">
+                      <span className="text-sm bg-secondary rounded px-4 py-0.5 font-normal">
+                        {formatDateDay(message.createdAt)}
+                      </span>
+                    </div>
+                  )}
+
                   <Message
                     message={message.message}
                     userId={message.userId}
@@ -49,7 +62,6 @@ export function Chat() {
                 </div>
               ))}
             </div>
-
             <SendMessage chatId={data.chatId} />
           </div>
         </div>

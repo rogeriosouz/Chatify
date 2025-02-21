@@ -11,8 +11,8 @@ import { useParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { createMessageChat } from '@/api/messages-chat/create-messages-chat'
 import { Textarea } from '@/components/ui/textarea'
-import { ListChatType } from './chat'
 import { useAuth } from '@/context/auth-context'
+import { ListChatType } from '@/context/chat-context'
 
 const sendMessageSchema = z.object({
   message: z.string().min(1),
@@ -85,7 +85,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
   return (
     <form
       onSubmit={handleSubmit(handleSendMessage)}
-      className="w-full flex py-3 bg-white border-t  items-center px-10 lg:px-4 gap-2"
+      className="w-full flex py-3 bg-white border-t items-center px-10 lg:px-4 gap-2"
     >
       <Textarea
         className="w-full resize-none h-[50px]"

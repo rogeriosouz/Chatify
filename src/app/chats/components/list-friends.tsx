@@ -14,8 +14,13 @@ import { Users } from '@phosphor-icons/react'
 import { AcceptFriend } from './accept-friend'
 import { RefuseFriend } from './refuse-friend'
 import { useCallback } from 'react'
+import { User } from './user'
 
-export function ListFriends() {
+interface ListFriendsProps {
+  isMobile?: boolean
+}
+
+export function ListFriends({ isMobile = false }: ListFriendsProps) {
   const { data, status } = useQuery<{
     friends: { id: string; name: string; chatId: string }[]
   }>({
@@ -46,7 +51,14 @@ export function ListFriends() {
   }, [data?.friends, usersOnline])
 
   return (
-    <div className="bg-secondary border-r lg:hidden h-[660px] overflow-auto">
+    <div
+      className={clsx('bg-secondary h-full overflow-auto', {
+        'lg:hidden border-r ': !isMobile,
+        'w-full': isMobile,
+      })}
+    >
+      <User />
+
       <div className="p-5">
         <div className="flex items-center gap-2">
           <Users className="size-10 text-primary" weight="fill" />
