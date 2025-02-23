@@ -21,6 +21,9 @@ interface ListFriendsProps {
 }
 
 export function ListFriends({ isMobile = false }: ListFriendsProps) {
+  const { usersOnline } = useSocket()
+  const { chatId } = useParams<{ chatId: string }>()
+
   const { data, status } = useQuery<{
     friends: { id: string; name: string; chatId: string }[]
   }>({
@@ -33,9 +36,6 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
       queryKey: ['/friends-request'],
       queryFn: friendsRequest,
     })
-
-  const { usersOnline } = useSocket()
-  const { friendId } = useParams()
 
   const friendsOnline = useCallback(() => {
     // eslint-disable-next-line array-callback-return
@@ -52,7 +52,7 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
 
   return (
     <div
-      className={clsx('bg-secondary  h-full overflow-auto', {
+      className={clsx('bg-secondary h-full overflow-auto', {
         'lg:hidden border-r': !isMobile,
         'w-full': isMobile,
       })}
@@ -105,11 +105,11 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
           {data?.friends.map((friend) => (
             <Link
               key={friend.id}
-              href={`/chats/${friend.id}`}
+              href={`/chats/${friend.chatId}`}
               className={clsx(
                 'w-full hover:bg-neutral-300 transition-all  flex items-center gap-2 py-2 px-5',
                 {
-                  'bg-neutral-200': friendId === friend.id,
+                  'bg-neutral-200': chatId === friend.chatId,
                 },
               )}
             >

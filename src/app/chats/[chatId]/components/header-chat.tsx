@@ -1,12 +1,12 @@
 import { useSocket } from '@/context/users-socket'
-import { useParams } from 'next/navigation'
+// import { useParams } from 'next/navigation'
 
 interface HeaderChatPops {
   userName: string
 }
 
 export function HeaderChat({ userName }: HeaderChatPops) {
-  const { friendId } = useParams<{ friendId: string }>()
+  // const { chatId } = useParams<{ chatId: string }>()
   const { usersOnline } = useSocket()
 
   return (
@@ -18,7 +18,7 @@ export function HeaderChat({ userName }: HeaderChatPops) {
             {userName}
           </p>
           <p className="text-xs text-muted-foreground">
-            {usersOnline?.includes(friendId) ? 'online' : 'offline'}
+            {usersOnline?.includes('friendId') ? 'online' : 'offline'}
           </p>
         </div>
       </div>

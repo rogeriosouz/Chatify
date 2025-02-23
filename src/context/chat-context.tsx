@@ -7,8 +7,10 @@ import { createContext, ReactNode, useContext } from 'react'
 export interface Message {
   id: string
   userId: string
-  message: string
+  message: string | null | undefined
   createdAt: string
+  isImage: string | null | undefined
+  imageUrl: string | null | undefined
 }
 
 export interface ListChatType {
@@ -29,12 +31,12 @@ interface ChatContextProps {
 const ChatContextContext = createContext({} as ChatContextProps)
 
 export function ChatContextProvide({ children }: { children: ReactNode }) {
-  const { friendId } = useParams<{ friendId: string }>()
+  const { chatId } = useParams<{ chatId: string }>()
 
   const { data, status } = useQuery<ListChatType>({
-    queryKey: ['/list-chat', friendId],
+    queryKey: ['/list-chat', chatId],
     queryFn: async () => {
-      const data = await listChat({ friendId })
+      const data = await listChat({ chatId })
 
       return data
     },

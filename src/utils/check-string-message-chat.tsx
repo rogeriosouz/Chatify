@@ -15,19 +15,32 @@ function isURL(str: string) {
 
 export function CheckStringType({ str }: { str: string }) {
   if (isNumeric(str)) {
-    return <p className="text-sm z-[999] font-medium text-blue-700">{str}</p>
+    return (
+      <p
+        style={{
+          color: '#317cf7',
+        }}
+        className="text-sm z-[999] font-normal"
+      >
+        {str}
+      </p>
+    )
   } else if (isURL(str)) {
     return (
       <a
         href={str}
         target="_blank"
-        className="text-sm z-[999] hover:text-blue-600 font-medium transition-all text-blue-700 underline"
+        style={{
+          textDecoration: 'underline',
+          color: '#317cf7',
+        }}
+        className="text-sm z-[999] font-normal"
         rel="noreferrer"
       >
         {str}
       </a>
     )
   } else {
-    return <p className="text-sm z-[999] font-normals">{str}</p>
+    return <p className="text-sm z-[999] font-normals text-black">{str}</p>
   }
 }

@@ -2,14 +2,16 @@ import { useAuth } from '@/context/auth-context'
 import { Notification } from './notification'
 import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
+import { useMediaQuery } from 'usehooks-ts'
 
 export function User() {
   const { user, logout } = useAuth()
+  const lgMediaMobile = useMediaQuery('(max-width: 1023px)')
 
   return (
     <div className="w-full  space-y-12 ">
-      <div className="w-full h-[65px] px-4 border-b flex items-center justify-between gap-2">
-        <Notification />
+      <div className="w-full h-[65px] px-4 border-b flex lg items-center justify-between gap-2">
+        {!lgMediaMobile && <Notification />}
 
         <Button
           onClick={logout}

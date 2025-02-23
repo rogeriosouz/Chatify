@@ -4,10 +4,11 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@/components/ui/popover'
-import { Bell, Link } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import clsx from 'clsx'
 import { useSocket } from '@/context/users-socket'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 export function Notification() {
   const [openNotification, setOpenNotification] = useState(false)
@@ -41,7 +42,7 @@ export function Notification() {
       onOpenChange={(value) => setOpenNotification(value)}
     >
       <PopoverTrigger asChild>
-        <Button variant={'default'} className="h-[40px] lg:hidden">
+        <Button variant={'default'} className="h-[40px]">
           <Bell className="size-5" />
         </Button>
       </PopoverTrigger>

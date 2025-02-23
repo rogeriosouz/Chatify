@@ -4,6 +4,7 @@ import { SendMessage } from './send-message'
 import { HeaderChat } from './header-chat'
 import { Message } from './message'
 import { useChat } from '@/context/chat-context'
+import { MobileHeader } from '../../components/mobile-header'
 import { formatDateDay } from '@/utils/format-date-day'
 
 export function Chat() {
@@ -31,6 +32,8 @@ export function Chat() {
     <>
       {statusQuerry === 'success' && data && (
         <div className="w-full h-screen flex flex-col">
+          <MobileHeader />
+
           <HeaderChat userName={data.friend.name} />
 
           <div className="space-y-6 flex-grow p-10 lg:px-4 scroll-smooths overflow-auto">
@@ -50,6 +53,8 @@ export function Chat() {
                 )}
 
                 <Message
+                  isImage={message.isImage}
+                  imageUrl={message.imageUrl}
                   message={message.message}
                   userId={message.userId}
                   createdAt={message.createdAt}
@@ -57,7 +62,8 @@ export function Chat() {
               </div>
             ))}
           </div>
-          <SendMessage chatId={data.chatId} />
+
+          <SendMessage />
         </div>
       )}
     </>

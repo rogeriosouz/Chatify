@@ -12,7 +12,7 @@ import { useMutation } from '@tanstack/react-query'
 import { createMessageChat } from '@/api/messages-chat/create-messages-chat'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/context/auth-context'
-import { ListChatType } from '@/context/chat-context'
+import { ListChatType, useChat } from '@/context/chat-context'
 import { PaperPlaneRight } from '@phosphor-icons/react'
 
 const sendMessageSchema = z.object({
@@ -21,29 +21,29 @@ const sendMessageSchema = z.object({
 
 type SendMessage = z.infer<typeof sendMessageSchema>
 
-interface SendMessageProps {
-  chatId: string
-}
-export function SendMessage({ chatId }: SendMessageProps) {
-  const { friendId } = useParams<{ friendId: string }>()
+export function SendMessage() {
+  const { chatId } = useParams<{ chatId: string }>()
   const { sendMessage, newMessages } = useSocket()
   const { user } = useAuth()
   const { register, handleSubmit, reset } = useForm<SendMessage>({
     resolver: zodResolver(sendMessageSchema),
   })
+  const { data, statusQuerry } = useChat()
 
   const createNewMessageMutation = useMutation({
     mutationFn: createMessageChat,
     onSuccess: (_, { chatId, message }) => {
-      sendMessage({
-        nameUser: user?.name as string,
-        message,
-        recipientId: friendId,
-        chatId,
-      })
+      if (data && statusQuerry === 'success') {
+        sendMessage({
+          nameUser: user?.name as string,
+          message,
+          recipientId: data.friend.id,
+          chatId,
+        })
+      }
 
       querryClient.invalidateQueries({
-        queryKey: ['/list-chat', friendId],
+        queryKey: ['/list-chat', chatId],
       })
 
       reset()
@@ -60,12 +60,12 @@ export function SendMessage({ chatId }: SendMessageProps) {
   useEffect(() => {
     const listChat = querryClient.getQueryData([
       '/list-chat',
-      friendId,
+      chatId,
     ]) as ListChatType
 
     if (newMessages) {
       if (newMessages.chatId === chatId) {
-        querryClient.setQueryData<ListChatType>(['/list-chat', friendId], {
+        querryClient.setQueryData<ListChatType>(['/list-chat', chatId], {
           ...listChat,
           messages: [
             ...listChat.messages,
@@ -79,7 +79,7 @@ export function SendMessage({ chatId }: SendMessageProps) {
         })
       }
     }
-  }, [chatId, friendId, newMessages])
+  }, [chatId, newMessages])
 
   const { isPending } = createNewMessageMutation
 
@@ -93,12 +93,13 @@ export function SendMessage({ chatId }: SendMessageProps) {
         placeholder="Enviar mensagem"
         {...register('message')}
       />
+
       <Button
-        disabled={isPending}
+        disabled={isPending || statusQuerry === 'pending'}
         type="submit"
-        className="!h-[50px]"
         variant={'default'}
       >
+        Enviar
         {isPending ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (

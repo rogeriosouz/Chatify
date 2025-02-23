@@ -75,7 +75,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     createdAt: string
     chatId: string
   } | null>(null)
-  const { friendId } = useParams()
+  const { chatId } = useParams()
 
   const [notificationNewMessage, setNotificationNewMessage] = useState<
     | null
@@ -169,10 +169,10 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (newMessages && !friendId) {
+    if (newMessages && !chatId) {
       setNewMessages(null)
     }
-  }, [newMessages, friendId])
+  }, [newMessages, chatId])
 
   function connectSocket(userId: string) {
     const socket = new WebSocket(`ws://localhost:3333/chats/ws/${userId}`)
