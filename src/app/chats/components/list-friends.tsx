@@ -97,7 +97,7 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
       {status === 'success' && (
         <div className="mb-5">
           {data.friends.length <= 0 && (
-            <p className="text-sm font-medium px-5 text-primary">
+            <p className="text-sm font-medium px-5  text-primary">
               !Você não possui amigos.
             </p>
           )}
@@ -107,7 +107,7 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
               key={friend.id}
               href={`/chats/${friend.chatId}`}
               className={clsx(
-                'w-full hover:bg-neutral-300 transition-all  flex items-center gap-2 py-2 px-5',
+                'w-full hover:bg-neutral-300 transition-all   flex items-center gap-2 py-2 px-5',
                 {
                   'bg-neutral-200': chatId === friend.chatId,
                 },

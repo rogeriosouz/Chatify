@@ -19,6 +19,8 @@ interface UsersSocketContextType {
     | {
         userId: string
         nameUser: string
+        isImage: string | null | undefined
+        isDocument: string | null | undefined
       }[]
     | null
   notificationAcceptedFriend: {
@@ -34,6 +36,9 @@ interface UsersSocketContextType {
     message: string
     createdAt: string
     chatId: string
+    isImage: string | null | undefined
+    isDocument: string | null | undefined
+    urlDocumentOrImage: string | null | undefined
   } | null
   sendAcceptedFriend: ({
     recipientId,
@@ -54,11 +59,17 @@ interface UsersSocketContextType {
     message,
     chatId,
     nameUser,
+    isImage,
+    isDocument,
+    urlDocumentOrImage,
   }: {
     recipientId: string
     message: string
     chatId: string
     nameUser: string
+    isImage: string | null | undefined
+    isDocument: string | null | undefined
+    urlDocumentOrImage: string | null | undefined
   }) => void
 }
 
@@ -74,6 +85,9 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     message: string
     createdAt: string
     chatId: string
+    isImage: string | null | undefined
+    isDocument: string | null | undefined
+    urlDocumentOrImage: string | null | undefined
   } | null>(null)
   const { chatId } = useParams()
 
@@ -82,6 +96,8 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     | {
         userId: string
         nameUser: string
+        isImage: string | null | undefined
+        isDocument: string | null | undefined
       }[]
   >(null)
 
@@ -111,18 +127,24 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     if (!socket && user) {
       connectSocket(user.id)
     }
-  }, [user])
+  }, [connectSocket, socket, user, newMessages])
 
   function sendMessage({
     recipientId,
     message,
     chatId,
     nameUser,
+    isImage,
+    isDocument,
+    urlDocumentOrImage,
   }: {
     recipientId: string
     message: string
     chatId: string
     nameUser: string
+    isImage: string | null | undefined
+    isDocument: string | null | undefined
+    urlDocumentOrImage: string | null | undefined
   }) {
     socket?.send(
       JSON.stringify({
@@ -131,6 +153,9 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         chatId,
         nameUser,
         message,
+        isImage,
+        isDocument,
+        urlDocumentOrImage,
       }),
     )
   }
@@ -188,6 +213,9 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         users?: string[]
         chatId: string
         nameUser?: string
+        isImage: string | null | undefined
+        isDocument: string | null | undefined
+        urlDocumentOrImage: string | null | undefined
       }
 
       switch (data.action) {
@@ -199,6 +227,9 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
               message: data.message,
               createdAt: new Date().toString(),
               chatId: data.chatId,
+              isDocument: data.isDocument,
+              isImage: data.isImage,
+              urlDocumentOrImage: data.urlDocumentOrImage,
             })
           }
 
@@ -212,12 +243,16 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
                     {
                       userId: data.userId,
                       nameUser: data.nameUser as string,
+                      isImage: data.isImage,
+                      isDocument: data.isDocument,
                     },
                   ]
                 : [
                     {
                       userId: data.userId,
                       nameUser: data.nameUser as string,
+                      isImage: data.isImage,
+                      isDocument: data.isDocument,
                     },
                   ],
             )

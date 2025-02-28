@@ -1,3 +1,4 @@
+'use client'
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -8,7 +9,6 @@ import { Bell } from 'lucide-react'
 import clsx from 'clsx'
 import { useSocket } from '@/context/users-socket'
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 
 export function Notification() {
   const [openNotification, setOpenNotification] = useState(false)
@@ -95,15 +95,10 @@ export function Notification() {
                     {newMessage.nameUser}
                   </h3>
                   <span className="text-xs font-normal">
-                    Envio uma mensagem para você
+                    {newMessage.isImage
+                      ? 'Envio uma imagem para você'
+                      : 'Envio uma mensagem para você'}
                   </span>
-
-                  <Link
-                    href={`/chats/${newMessage.userId}`}
-                    className="block text-sm font-normal hover:text-primary hover:underline"
-                  >
-                    Ver mensagem
-                  </Link>
                 </div>
               </div>
             ))}

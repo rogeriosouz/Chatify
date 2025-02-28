@@ -10,7 +10,8 @@ export interface Message {
   message: string | null | undefined
   createdAt: string
   isImage: string | null | undefined
-  imageUrl: string | null | undefined
+  isDocument: string | null | undefined
+  urlDocumentOrImage: string | null | undefined
 }
 
 export interface ListChatType {

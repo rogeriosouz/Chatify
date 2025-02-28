@@ -1,8 +1,9 @@
 'use client'
 import { deleteCookieServer } from '@/actions/deleteCookieServer'
+import { getCookieServer } from '@/actions/get-cookies-server'
 import { login } from '@/api/login'
 import { api } from '@/lib/api'
-import { deleteCookie, getCookie, setCookie } from 'cookies-next'
+import { deleteCookie, setCookie } from 'cookies-next'
 import { decode } from 'jsonwebtoken'
 import { useRouter } from 'next/navigation'
 import {
@@ -53,16 +54,20 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const { push } = useRouter()
 
   useEffect(() => {
-    const token = getCookie('auth-token:front-token')
+    async function getCookie() {
+      const token = await getCookieServer('refreshToken')
 
-    if (token) {
-      const { user } = decode(token as string) as JwtResponse
-      setUser({
-        id: user.id,
-        email: user.email,
-        name: user.name,
-      })
+      if (token) {
+        const { user } = decode(token.value as string) as JwtResponse
+        setUser({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        })
+      }
     }
+
+    getCookie()
   }, [])
 
   async function signin({

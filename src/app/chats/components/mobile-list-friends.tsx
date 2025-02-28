@@ -27,7 +27,7 @@ export function MobileListFriends() {
       <SheetTrigger>
         <ArrowLeft className="size-6 text-primary" />
       </SheetTrigger>
-      <SheetContent side={'left'} className="bg-secondary">
+      <SheetContent side={'left'} className="bg-secondary !p-0 !w-full">
         <SheetHeader>
           <SheetTitle></SheetTitle>
           <SheetDescription></SheetDescription>

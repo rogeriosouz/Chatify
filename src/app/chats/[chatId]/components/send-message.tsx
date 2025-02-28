@@ -14,6 +14,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/context/auth-context'
 import { ListChatType, useChat } from '@/context/chat-context'
 import { PaperPlaneRight } from '@phosphor-icons/react'
+import { SendImage } from './send-image'
+import { SendDocument } from './send-document'
 
 const sendMessageSchema = z.object({
   message: z.string().min(1),
@@ -35,15 +37,19 @@ export function SendMessage() {
     onSuccess: (_, { chatId, message }) => {
       if (data && statusQuerry === 'success') {
         sendMessage({
+          recipientId: data.friend.id,
           nameUser: user?.name as string,
           message,
-          recipientId: data.friend.id,
           chatId,
+          urlDocumentOrImage: null,
+          isDocument: null,
+          isImage: null,
         })
       }
 
       querryClient.invalidateQueries({
         queryKey: ['/list-chat', chatId],
+        type: 'all',
       })
 
       reset()
@@ -74,6 +80,13 @@ export function SendMessage() {
               userId: newMessages.userId,
               message: newMessages.message,
               createdAt: newMessages.createdAt,
+              isImage: newMessages.isImage ? newMessages.isImage : null,
+              isDocument: newMessages.isDocument
+                ? newMessages.isDocument
+                : null,
+              urlDocumentOrImage: newMessages.urlDocumentOrImage
+                ? newMessages.urlDocumentOrImage
+                : null,
             },
           ],
         })
@@ -84,28 +97,34 @@ export function SendMessage() {
   const { isPending } = createNewMessageMutation
 
   return (
-    <form
-      onSubmit={handleSubmit(handleSendMessage)}
-      className="w-full flex py-3 border-t items-center px-10 lg:px-4 gap-2"
-    >
-      <Textarea
-        className="w-full resize-none h-[50px]"
-        placeholder="Enviar mensagem"
-        {...register('message')}
-      />
+    <div className="w-full flex border-t items-center gap-2 py-3 px-10 lg:px-4">
+      <SendDocument />
+      <SendImage />
 
-      <Button
-        disabled={isPending || statusQuerry === 'pending'}
-        type="submit"
-        variant={'default'}
+      <form
+        onSubmit={handleSubmit(handleSendMessage)}
+        className="w-full flex items-center gap-2"
       >
-        Enviar
-        {isPending ? (
-          <Loader2 className="size-4 animate-spin" />
-        ) : (
-          <PaperPlaneRight className="size-4" weight="fill" />
-        )}
-      </Button>
-    </form>
+        <Textarea
+          className="w-full resize-none pt-3 h-[50px]"
+          placeholder="Enviar mensagem"
+          disabled={statusQuerry === 'pending'}
+          {...register('message')}
+        />
+
+        <Button
+          disabled={isPending || statusQuerry === 'pending'}
+          type="submit"
+          variant={'default'}
+        >
+          Enviar
+          {isPending ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <PaperPlaneRight className="size-4" weight="fill" />
+          )}
+        </Button>
+      </form>
+    </div>
   )
 }
