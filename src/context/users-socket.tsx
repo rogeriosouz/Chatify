@@ -127,7 +127,9 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     if (!socket && user) {
       connectSocket(user.id)
     }
-  }, [connectSocket, socket, user, newMessages])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket, user, newMessages])
 
   function sendMessage({
     recipientId,
@@ -287,6 +289,10 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
           break
         case 'connectedUsers':
           if (data.users) {
+            if (!socket && user) {
+              connectSocket(user.id)
+            }
+
             setUsersOnline(data.users)
           }
 

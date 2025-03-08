@@ -15,6 +15,7 @@ import { AcceptFriend } from './accept-friend'
 import { RefuseFriend } from './refuse-friend'
 import { useCallback } from 'react'
 import { User } from './user'
+import Image from 'next/image'
 
 interface ListFriendsProps {
   isMobile?: boolean
@@ -25,7 +26,7 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
   const { chatId } = useParams<{ chatId: string }>()
 
   const { data, status } = useQuery<{
-    friends: { id: string; name: string; chatId: string }[]
+    friends: { id: string; name: string; imageUrl: string; chatId: string }[]
   }>({
     queryKey: ['/friends'],
     queryFn: getFriends,
@@ -114,6 +115,13 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
               )}
             >
               <div className="size-12 rounded-full bg-primary relative">
+                <Image
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-cover rounded-full"
+                  src={friend.imageUrl}
+                  alt={friend.name}
+                />
                 {usersOnline?.includes(friend.id) && (
                   <div className="absolute top-[70%] left-[70%] size-4 bg-green-500 rounded-full"></div>
                 )}
@@ -170,7 +178,15 @@ export function ListFriends({ isMobile = false }: ListFriendsProps) {
                   className="w-full transition-all justify-between flex items-center py-2 px-5"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="size-12 rounded-full bg-primary relative">
+                    <div className="size-12 rounded-full relative">
+                      <Image
+                        width={80}
+                        height={80}
+                        className="w-full h-full rounded-full"
+                        src={friend.imageUrl as string}
+                        alt={friend.nameFriend as string}
+                      />
+
                       {usersOnline?.includes(friend.friendId) && (
                         <div className="absolute top-[70%] left-[70%] size-4 bg-green-500 rounded-full"></div>
                       )}

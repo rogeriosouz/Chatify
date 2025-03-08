@@ -5,9 +5,11 @@ import { LogOut } from 'lucide-react'
 import { Notification } from './notification'
 import { FriendCardChat } from './friend-card-chat'
 import { useMediaQuery } from 'usehooks-ts'
+import { useSocket } from '@/context/users-socket'
 
 export function MobileHeader() {
   const { logout } = useAuth()
+  const { disconnectSocket } = useSocket()
   const lgMediaMobile = useMediaQuery('(max-width: 1023px)')
 
   return (
@@ -19,7 +21,10 @@ export function MobileHeader() {
 
         <nav className="flex items-center gap-2">
           <Button
-            onClick={logout}
+            onClick={() => {
+              disconnectSocket()
+              logout()
+            }}
             variant={'outline'}
             className="flex h-[40px] items-center"
           >

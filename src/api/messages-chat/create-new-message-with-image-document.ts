@@ -4,28 +4,31 @@ interface CreateNewMessageWithImageRequest {
   chatId: string
   message: string | null
   isDocument?: boolean
-  file: File
+  urlDocumentOrImage: string
 }
 
 export async function createNewMessageWithImageDocument({
   chatId,
-  file,
   message,
   isDocument = false,
+  urlDocumentOrImage,
 }: CreateNewMessageWithImageRequest) {
-  const bodyFormData = new FormData()
-  bodyFormData.set('file', file)
-  bodyFormData.set('chatId', chatId)
-
-  if (isDocument) {
-    bodyFormData.set('isDocument', JSON.stringify(isDocument))
-  }
-
   if (message) {
-    bodyFormData.set('message', message)
+    const { data } = await api.post('/message/file', {
+      message,
+      chatId,
+      isDocument,
+      urlDocumentOrImage,
+    })
+
+    return data
   }
 
-  const { data } = await api.post('/messages-chat-with-image', bodyFormData)
+  const { data } = await api.post('/message/file', {
+    chatId,
+    isDocument,
+    urlDocumentOrImage,
+  })
 
   return data
 }

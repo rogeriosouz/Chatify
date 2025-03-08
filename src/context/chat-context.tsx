@@ -20,6 +20,7 @@ export interface ListChatType {
   friend: {
     id: string
     name: string
+    imageUrl: string
   }
 }
 

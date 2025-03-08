@@ -24,6 +24,7 @@ import { useParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { querryClient } from '@/lib/react-querry'
 import { createNewMessageWithImageDocument } from '@/api/messages-chat/create-new-message-with-image-document'
+import { upload } from '@/api/upload'
 
 const schemaSendImage = z.object({
   message: z.string().optional(),
@@ -46,6 +47,29 @@ export function SendImage() {
     resolver: zodResolver(schemaSendImage),
   })
 
+  const uploadImageMutation = useMutation<
+    {
+      fileUrl: string
+    },
+    { response: { data: { message: string } } },
+    { file: File; message: string | null; chatId: string },
+    unknown
+  >({
+    mutationFn: async ({ file }) => {
+      const data = await upload({ file })
+
+      return data
+    },
+    onSuccess: ({ fileUrl }, { chatId, message }) => {
+      setFile(null)
+      sendImageMutation.mutate({
+        chatId,
+        message: message || null,
+        urlDocumentOrImage: fileUrl,
+      })
+    },
+  })
+
   const sendImageMutation = useMutation<
     {
       fileUrl: string
@@ -55,14 +79,14 @@ export function SendImage() {
       }
     },
     { response: { data: { message: string } } },
-    { file: File; message: string | null; chatId: string },
+    { message: string | null; chatId: string; urlDocumentOrImage: string },
     unknown
   >({
-    mutationFn: async ({ file, chatId, message }) => {
+    mutationFn: async ({ urlDocumentOrImage, chatId, message }) => {
       const data = await createNewMessageWithImageDocument({
-        file,
         chatId,
         message,
+        urlDocumentOrImage,
       })
 
       return data
@@ -118,7 +142,7 @@ export function SendImage() {
       return
     }
 
-    sendImageMutation.mutate({
+    uploadImageMutation.mutate({
       file,
       chatId,
       message: data.message || null,
@@ -141,7 +165,8 @@ export function SendImage() {
     }
   }, [openSendImage])
 
-  const { isPending } = sendImageMutation
+  const { isPending: isPendingSendImageMutation } = sendImageMutation
+  const { isPending: isPendingUploadImage } = uploadImageMutation
 
   return (
     <>
@@ -167,6 +192,9 @@ export function SendImage() {
 
                   <Input
                     ref={inputEditRef}
+                    disabled={
+                      isPendingUploadImage || isPendingSendImageMutation
+                    }
                     accept="image/*"
                     onChange={(e) => {
                       const fileTarget = e.target.files?.[0] as File
@@ -204,9 +232,13 @@ export function SendImage() {
                   />
                 </label>
 
-                <Button disabled={isPending} type="submit" className="w-full">
+                <Button
+                  disabled={isPendingUploadImage || isPendingSendImageMutation}
+                  type="submit"
+                  className="w-full"
+                >
                   Enviar imagem{' '}
-                  {isPending ? (
+                  {isPendingUploadImage || isPendingSendImageMutation ? (
                     <Loader2 className="size-5 animate-spin" />
                   ) : (
                     <Send className="size-5" />
@@ -220,7 +252,7 @@ export function SendImage() {
 
       <label className="border disabled:opacity-80 cursor-pointer text-primary relative transition-all rounded border-primary hover:bg-primary hover:text-white h-full size-16">
         <Input
-          disabled={statusQuerry === 'pending'}
+          disabled={isPendingUploadImage || isPendingSendImageMutation}
           ref={inputRef}
           accept="image/*"
           onChange={(e) => {

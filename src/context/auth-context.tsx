@@ -20,6 +20,7 @@ export type User = {
   id: string
   email: string
   name: string
+  imageUrl: string
 }
 
 export type JwtResponse = {
@@ -39,6 +40,7 @@ type AuthContextType = {
     email: string
     password: string
   }) => Promise<void>
+  updateUser: (user: User) => void
 }
 
 const UseAuthContext = createContext({} as AuthContextType)
@@ -59,10 +61,12 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
       if (token) {
         const { user } = decode(token.value as string) as JwtResponse
+
         setUser({
           id: user.id,
           email: user.email,
           name: user.name,
+          imageUrl: user.imageUrl,
         })
       }
     }
@@ -88,6 +92,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         id: data.user.id,
         email: data.user.email,
         name: data.user.name,
+        imageUrl: data.user.imageUrl,
       })
 
       const { exp } = decode(data.token) as JwtResponse
@@ -144,6 +149,10 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function updateUser(user: User) {
+    setUser(user)
+  }
+
   const isAuthenticated = !!user
 
   const values = {
@@ -152,6 +161,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     status,
     isAuthenticated,
     logout,
+    updateUser,
   }
 
   return (

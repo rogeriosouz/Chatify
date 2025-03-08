@@ -4,6 +4,7 @@ export interface Friends {
   id: string
   userId: string
   nameFriend: string
+  imageUrl: string
   friendId: string
   status: string | null
   createdAt: string
