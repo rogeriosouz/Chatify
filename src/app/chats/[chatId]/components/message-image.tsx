@@ -57,7 +57,7 @@ export function MessageImage({ message }: MessageImageProps) {
               </span>
             </div>
           </DialogTrigger>
-          <DialogContent className="!max-w-[900px] bg-transparent border-none shadow-none">
+          <DialogContent className="!min-w-[500px] bg-transparent border-none shadow-none">
             <DialogHeader>
               <DialogTitle></DialogTitle>
               <DialogDescription></DialogDescription>
@@ -65,7 +65,7 @@ export function MessageImage({ message }: MessageImageProps) {
 
             <div className="relative">
               <Image
-                className="object-cover relative w-full h-[500px] rounded"
+                className="object-cover relative w-full rounded"
                 width={900}
                 height={490}
                 src={urlImage}

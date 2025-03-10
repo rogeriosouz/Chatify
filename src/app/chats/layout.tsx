@@ -1,7 +1,7 @@
 import { UsersSocketProvider } from '@/context/users-socket'
-import { ListFriends } from './components/list-friends'
 import { Toaster } from '@/components/ui/sonner'
 import { ChatContextProvide } from '@/context/chat-context'
+import { Friends } from './components/friends'
 
 export default function ChatLayout({
   children,
@@ -13,7 +13,7 @@ export default function ChatLayout({
       <ChatContextProvide>
         <div className="w-full grid grid-cols-1 h-screen">
           <div className="grid lg:grid-cols-1 grid-cols-[400px,1fr]">
-            <ListFriends />
+            <Friends />
 
             <div className="w-full flex">{children}</div>
           </div>

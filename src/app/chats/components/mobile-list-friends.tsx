@@ -1,3 +1,4 @@
+'use client'
 import {
   SheetTrigger,
   SheetContent,
@@ -7,7 +8,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 
-import { ListFriends } from './list-friends'
+import { Friends } from './friends'
 import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -33,7 +34,7 @@ export function MobileListFriends() {
           <SheetDescription></SheetDescription>
         </SheetHeader>
 
-        <ListFriends isMobile />
+        <Friends isMobile />
       </SheetContent>
     </Sheet>
   )

@@ -8,11 +8,13 @@ import { JwtResponse, useAuth } from '@/context/auth-context'
 import { api } from '@/lib/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Pen } from '@phosphor-icons/react'
+import { ArrowLeft } from '@phosphor-icons/react/dist/ssr'
 import { useMutation } from '@tanstack/react-query'
 import { setCookie } from 'cookies-next'
 import { decode } from 'jsonwebtoken'
 import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -126,8 +128,16 @@ export default function Edit() {
   const { isPending: isPendingUpdateUser } = updateUserMutation
 
   return (
-    <main className="w-full flex min-h-screen">
-      <div className="min-w-[400px] space-y-2 flex-grow border-r h-screen px-10 py-20 bg-secondary">
+    <main className="w-full flex xl:flex-col min-h-screen">
+      <div className="min-w-[400px] xl:max-h-max  relative  space-y-2 flex-grow border-r h-screen px-10 py-20 bg-secondary">
+        <Link
+          href={'/chats'}
+          className="absolute left-3 hover:text-primary/60 transition-all flex text-primary gap-2 items-center top-3"
+        >
+          <ArrowLeft className="size-7 " />
+          <p className="text-sm">Voltar</p>
+        </Link>
+
         <div className="w-full flex items-center justify-center">
           <div className="size-32 relative group overflow-hidden rounded-full">
             <label className="opacity-0 absolute cursor-pointer left-0 top-0 right-0 transition-all bottom-0 group-hover:opacity-100 size-32 bg-zinc-900/60 flex items-center justify-center">
@@ -179,8 +189,8 @@ export default function Edit() {
         </div>
       </div>
 
-      <div className="w-full  h-screen px-10 py-20">
-        <div className="w-full max-w-[700px]">
+      <div className="w-full xl:h-min  h-screen px-10 py-20">
+        <div className="w-[700px] xl:w-full">
           <h2 className="text-2xl font-normal mb-10">Editar perfil</h2>
           <form onSubmit={handleSubmit(handleEditProfile)} className="w-full">
             {!user && (

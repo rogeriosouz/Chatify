@@ -32,10 +32,10 @@ export function User() {
       </div>
       <div className="space-y-3">
         <div className="flex items-center justify-center">
-          <div className="size-20 rounded-full relative overflow-hidden group">
+          <div className="size-20 rounded-full relative group">
             <Link
               href={'/profile/edit'}
-              className="absolute left-0 opacity-0 group-hover:opacity-100 transition-all right-0 cursor-pointer  bottom-0 top-0 bg-zinc-900/70 flex items-center justify-center"
+              className="absolute left-0 rounded-full opacity-0 group-hover:opacity-100 transition-all right-0 cursor-pointer  bottom-0 top-0 bg-zinc-900/70 flex items-center justify-center"
             >
               <Pen className="size-7 text-white" weight="fill" />
             </Link>
