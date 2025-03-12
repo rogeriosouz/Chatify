@@ -2,12 +2,15 @@ import { getFriends } from '@/api/friends/get-friends'
 import { useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import { SearchFriend } from './search-friend'
 import { useSocket } from '@/context/users-socket'
+import clsx from 'clsx'
 
 export function ListFriends() {
   const { usersOnline } = useSocket()
+  const { chatId } = useParams()
+
   const searchParams = useSearchParams()
   const search = searchParams.get('search')
 
@@ -39,7 +42,12 @@ export function ListFriends() {
             <Link
               key={friend.id}
               href={`/chats/${friend.chatId}`}
-              className="w-full hover:bg-neutral-300 transition-all flex items-center gap-2 py-2 px-5"
+              className={clsx(
+                'w-full hover:bg-neutral-300 transition-all flex items-center gap-2 py-2 px-5',
+                {
+                  'bg-neutral-300': chatId ? friend.chatId === chatId : null,
+                },
+              )}
             >
               <div className="size-12 rounded-full bg-primary relative">
                 <Image

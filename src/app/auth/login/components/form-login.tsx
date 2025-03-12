@@ -60,13 +60,13 @@ export function FormLogin() {
         <p className="text-base font-normal text-muted-foreground">Password</p>
         <Input
           {...register('password')}
-          type="text"
+          type="password"
           placeholder="Enter your password"
         />
       </label>
 
       <Link
-        href={'/auth/recovery-password'}
+        href={'/auth/forgot-password'}
         className="mb-8 block hover:underline hover:text-primary-foreground/80 transition-all mt-2 text-sm text-primary-foreground text-right"
       >
         Forgot Password?

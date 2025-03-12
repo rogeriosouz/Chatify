@@ -32,7 +32,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
               onClick={() => setVisiblePassword(!visiblePassword)}
               size={'icon'}
               type="button"
-              className="absolute top-1/2 -translate-y-1/2 right-0 size-10"
+              className="absolute rounded-l-none top-1/2 -translate-y-1/2 right-0 size-10"
             >
               {visiblePassword ? (
                 <EyeClosed className="size-5" />

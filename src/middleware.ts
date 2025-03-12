@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const chatsUrl = new URL('/chats', request.url)
   const routerType = routersType(request.nextUrl.pathname)
 
-  if (request.nextUrl.pathname === '/' && token) {
+  if (request.nextUrl.pathname === '/') {
     const response = NextResponse.redirect(chatsUrl)
 
     return response
