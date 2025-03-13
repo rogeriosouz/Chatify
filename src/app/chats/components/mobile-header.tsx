@@ -10,7 +10,10 @@ import { useSocket } from '@/context/users-socket'
 export function MobileHeader() {
   const { logout } = useAuth()
   const { disconnectSocket } = useSocket()
-  const lgMediaMobile = useMediaQuery('(max-width: 1023px)')
+  const lgMediaMobile = useMediaQuery('(max-width: 1023px)', {
+    defaultValue: false,
+    initializeWithValue: false,
+  })
 
   return (
     <div className="hidden lg:flex items-center justify-between border-b py-2 px-4">

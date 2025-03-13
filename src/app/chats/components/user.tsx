@@ -1,3 +1,4 @@
+'use client'
 import { useAuth } from '@/context/auth-context'
 import { Notification } from './notification'
 import { Button } from '@/components/ui/button'
@@ -11,7 +12,10 @@ import Link from 'next/link'
 export function User() {
   const { user, logout } = useAuth()
   const { disconnectSocket } = useSocket()
-  const lgMediaMobile = useMediaQuery('(max-width: 1023px)')
+  const lgMediaMobile = useMediaQuery('(max-width: 1023px)', {
+    defaultValue: false,
+    initializeWithValue: false,
+  })
 
   return (
     <div className="w-full  space-y-12 ">

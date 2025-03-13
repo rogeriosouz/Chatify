@@ -1,5 +1,4 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverTrigger,
@@ -41,10 +40,8 @@ export function Notification() {
       open={openNotification}
       onOpenChange={(value) => setOpenNotification(value)}
     >
-      <PopoverTrigger asChild>
-        <Button variant={'default'} className="h-[40px]">
-          <Bell className="size-5" />
-        </Button>
+      <PopoverTrigger className="h-[40px] rounded px-4 bg-primary text-white">
+        <Bell className="size-5" />
       </PopoverTrigger>
       <PopoverContent className="w-[350px] !p-0">
         {notificationAcceptedFriend && (

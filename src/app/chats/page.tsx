@@ -9,6 +9,7 @@ import { useMediaQuery } from 'usehooks-ts'
 export default function Chats() {
   const { user } = useAuth()
   const lgMediaMobile = useMediaQuery('(max-width: 1023px)')
+
   return (
     <main className="w-full xl:flex-col relative flex items-center">
       <div className="w-full hidden xl:flex py-2 px-5 items-center gap-2 absolute top-0 left-0 right-0 border-b bg-secondary">
