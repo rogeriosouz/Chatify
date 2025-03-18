@@ -1,4 +1,4 @@
-import { File, FileDoc, Pencil } from '@phosphor-icons/react'
+import { File, FileCode, Pencil } from '@phosphor-icons/react'
 
 import {
   Dialog,
@@ -100,6 +100,7 @@ export function SendDocument() {
           urlDocumentOrImage: fileUrl,
           message: message || '',
           nameUser: user.name,
+          imageUserUrl: user.imageUrl as string,
         })
 
         querryClient.invalidateQueries({
@@ -193,7 +194,7 @@ export function SendDocument() {
 
           <div className="w-full flex items-center justify-center flex-col">
             <div className="w-full relative h-[250px] border border-dashed py-5 flex items-center justify-center">
-              <label className="size-10 cursor-pointer hover:opacity-80 transition-all bg-primary flex items-center justify-center rounded absolute top-2 right-2">
+              <label className="size-10 cursor-pointer hover:opacity-80 transition-all bg-primary flex items-center justify-center rounded-md absolute top-2 right-2">
                 <Pencil
                   className="size-5 text-white mx-auto absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
                   weight="fill"
@@ -253,26 +254,27 @@ export function SendDocument() {
         </DialogContent>
       </Dialog>
 
-      <label className="border group cursor-pointer text-primary relative transition-all rounded border-primary hover:bg-primary hover:text-white h-full size-16">
-        <Input
-          disabled={isPendingUploadImage || isPendingSendDocumentMutation}
-          ref={inputRef}
-          accept=".pdf,.doc,.docx,.txt"
-          onChange={(e) => {
-            setOpenSendDocument(() => true)
-
-            const fileTarget = e.target.files?.[0] as File
-            setFile(fileTarget)
-          }}
-          type="file"
-          className="hidden"
-        />
-
-        <FileDoc
-          className="size-6 mx-auto absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
-          weight="regular"
-        />
+      <label
+        htmlFor="input-doc"
+        className="min-w-10 min-h-10 cursor-pointer hover:opacity-85 transition-all flex items-center justify-center rounded-full bg-primary"
+      >
+        <FileCode className="min-w-5 min-h-5 text-white" weight="fill" />
       </label>
+
+      <Input
+        id="input-doc"
+        disabled={isPendingUploadImage || isPendingSendDocumentMutation}
+        ref={inputRef}
+        accept=".pdf,.doc,.docx,.txt"
+        onChange={(e) => {
+          setOpenSendDocument(() => true)
+
+          const fileTarget = e.target.files?.[0] as File
+          setFile(fileTarget)
+        }}
+        type="file"
+        className="hidden"
+      />
     </>
   )
 }

@@ -101,6 +101,7 @@ export function SendImage() {
           chatId,
           message: message || '',
           nameUser: user.name,
+          imageUserUrl: user.imageUrl,
         })
 
         querryClient.invalidateQueries({
@@ -184,7 +185,7 @@ export function SendImage() {
           <div className="w-full flex items-center justify-center flex-col">
             {imagePreview && (
               <div className="w-full relative h-[250px] border border-dashed py-5 flex items-center justify-center">
-                <label className="size-10 cursor-pointer hover:opacity-80 transition-all bg-primary flex items-center justify-center rounded absolute top-2 right-2">
+                <label className="size-10 cursor-pointer hover:opacity-80 transition-all bg-primary flex items-center justify-center rounded-md absolute top-2 right-2">
                   <Pencil
                     className="size-5 text-white mx-auto absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
                     weight="fill"
@@ -212,7 +213,7 @@ export function SendImage() {
                   width={220}
                   height={250}
                   src={imagePreview}
-                  className="rounded h-full object-fill"
+                  className="rounded-md h-full object-fill"
                   alt="image-preview"
                 />
               </div>
@@ -250,29 +251,30 @@ export function SendImage() {
         </DialogContent>
       </Dialog>
 
-      <label className="border disabled:opacity-80 cursor-pointer text-primary relative transition-all rounded border-primary hover:bg-primary hover:text-white h-full size-16">
-        <Input
-          disabled={isPendingUploadImage || isPendingSendImageMutation}
-          ref={inputRef}
-          accept="image/*"
-          onChange={(e) => {
-            setOpenSendImage(() => true)
-
-            const fileTarget = e.target.files?.[0] as File
-            setFile(fileTarget)
-
-            const objectUrl = URL.createObjectURL(fileTarget)
-            setImagePreview(objectUrl)
-          }}
-          type="file"
-          className="hidden"
-        />
-
-        <Images
-          className="size-6 mx-auto absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
-          weight="fill"
-        />
+      <label
+        htmlFor="input-image"
+        className="min-w-10 min-h-10 hover:opacity-85 transition-all cursor-pointer flex items-center justify-center rounded-full bg-primary"
+      >
+        <Images className="size-5 text-white" weight="fill" />
       </label>
+
+      <Input
+        id="input-image"
+        disabled={isPendingUploadImage || isPendingSendImageMutation}
+        ref={inputRef}
+        accept="image/*"
+        onChange={(e) => {
+          setOpenSendImage(() => true)
+
+          const fileTarget = e.target.files?.[0] as File
+          setFile(fileTarget)
+
+          const objectUrl = URL.createObjectURL(fileTarget)
+          setImagePreview(objectUrl)
+        }}
+        type="file"
+        className="hidden"
+      />
     </>
   )
 }

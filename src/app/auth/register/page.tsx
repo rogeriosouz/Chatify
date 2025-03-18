@@ -5,7 +5,7 @@ import { FormRegister } from './components/form-register'
 export default function Register() {
   return (
     <div className="w-full max-h-screen px-9">
-      <h2 className="text-center mb-3 mt-8 font-bold text-xl">
+      <h2 className="text-center mb-3 mt-8 font-bold text-2xl">
         Sign in and start today!
       </h2>
 

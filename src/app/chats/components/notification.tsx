@@ -4,10 +4,11 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from '@/components/ui/popover'
-import { Bell } from 'lucide-react'
 import clsx from 'clsx'
 import { useSocket } from '@/context/users-socket'
 import { useEffect, useState } from 'react'
+import { Bell } from '@phosphor-icons/react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function Notification() {
   const [openNotification, setOpenNotification] = useState(false)
@@ -40,20 +41,40 @@ export function Notification() {
       open={openNotification}
       onOpenChange={(value) => setOpenNotification(value)}
     >
-      <PopoverTrigger className="h-[40px] rounded px-4 bg-primary text-white">
-        <Bell className="size-5" />
+      <PopoverTrigger className="h-[40px] rounded-md px-4 text-white">
+        <div className="size-7 relative">
+          <div className="absolute rounded-full flex items-center justify-center top-[-5px] right-0 size-4 bg-red-500 text-white">
+            <span className="text-xs">
+              {notificationAcceptedFriend ||
+              notificationNewMessage ||
+              notificationNewFriendsRequest
+                ? 1
+                : 0}
+            </span>
+          </div>
+
+          <Bell className="size-7 text-primary" weight="fill" />
+        </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[350px] !p-0">
+      <PopoverContent align="end" className="w-[350px] !p-0">
         {notificationAcceptedFriend && (
           <div className="w-full flex items-center gap-2 border-y p-4">
-            <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
+            <div className="min-w-10 rounded-full min-h-10 overflow-hidden">
+              <Avatar>
+                <AvatarImage
+                  src={notificationAcceptedFriend.imageUserUrl}
+                  alt={notificationAcceptedFriend.nameUser}
+                />
+                <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+              </Avatar>
+            </div>
 
             <div>
               <h3 className="text-sm capitalize font-bold text-primary">
                 {notificationAcceptedFriend.nameUser}
               </h3>
               <span className="text-xs font-normal">
-                Aceitou sua solicitação de amizade, agora vocês são amigos
+                Accepted your friend request, you are now friends
               </span>
             </div>
           </div>
@@ -61,13 +82,23 @@ export function Notification() {
 
         {notificationNewFriendsRequest && (
           <div className="w-full flex items-center gap-2 border-y p-4 ">
-            <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
+            <div className="min-w-10 rounded-full min-h-10 overflow-hidden">
+              <Avatar>
+                <AvatarImage
+                  src={notificationNewFriendsRequest.imageUserUrl}
+                  alt={notificationNewFriendsRequest.nameUser}
+                />
+                <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+              </Avatar>
+            </div>
 
             <div>
               <h3 className="text-sm capitalize font-bold text-primary">
                 {notificationNewFriendsRequest.nameUser}
               </h3>
-              <span className="text-xs font-normal">Te pediu em amizade</span>
+              <span className="text-xs font-normal">
+                He asked for your friendship
+              </span>
             </div>
           </div>
         )}
@@ -85,7 +116,15 @@ export function Notification() {
                     !notificationNewFriendsRequest,
                 })}
               >
-                <div className="min-w-10 min-h-10 rounded-full bg-primary"></div>
+                <div className="min-w-10 rounded-full min-h-10 overflow-hidden">
+                  <Avatar>
+                    <AvatarImage
+                      src={newMessage.imageUserUrl}
+                      alt={newMessage.nameUser}
+                    />
+                    <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+                  </Avatar>
+                </div>
 
                 <div>
                   <h3 className="text-sm capitalize font-bold text-primary">
@@ -93,8 +132,8 @@ export function Notification() {
                   </h3>
                   <span className="text-xs font-normal">
                     {newMessage.isImage
-                      ? 'Envio uma imagem para você'
-                      : 'Envio uma mensagem para você'}
+                      ? 'I send you an image'
+                      : 'I send you a message'}
                   </span>
                 </div>
               </div>
@@ -105,7 +144,8 @@ export function Notification() {
         {!notificationNewFriendsRequest &&
           !notificationNewMessage &&
           !notificationAcceptedFriend && (
-            <p className="p-5">Você não possui Nenhuma mensagem!</p>
+            // eslint-disable-next-line react/no-unescaped-entities
+            <p className="p-5">You don't have any messages!</p>
           )}
       </PopoverContent>
     </Popover>

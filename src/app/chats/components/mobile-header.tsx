@@ -18,7 +18,6 @@ export function MobileHeader() {
   return (
     <div className="hidden lg:flex items-center justify-between border-b py-2 px-4">
       <FriendCardChat />
-
       <div className="flex items-center gap-2">
         {lgMediaMobile && <Notification />}
 

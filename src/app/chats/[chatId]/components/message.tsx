@@ -17,7 +17,7 @@ export function Message({ message }: MessageProps) {
         'justify-end': message.userId === user?.id,
       })}
     >
-      <div className="relative bg-secondary rounded px-3 py-2 pr-12">
+      <div className="relative bg-secondary rounded-md px-3 py-2 pr-12">
         <CheckStringType str={message.message as string} />
 
         <div

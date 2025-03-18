@@ -1,13 +1,21 @@
 'use client'
 import { useAuth } from '@/context/auth-context'
 import { Notification } from './notification'
-import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
 import { useMediaQuery } from 'usehooks-ts'
 import { useSocket } from '@/context/users-socket'
-import Image from 'next/image'
-import { Pen } from '@phosphor-icons/react/dist/ssr'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
+import { Pen } from '@phosphor-icons/react'
 
 export function User() {
   const { user, logout } = useAuth()
@@ -18,52 +26,55 @@ export function User() {
   })
 
   return (
-    <div className="w-full  space-y-12 ">
-      <div className="w-full h-[65px] px-4 border-b flex lg items-center justify-between gap-2">
+    <div className="w-full h-[65px] px-4 shadow-xl lg:justify-start flex items-center justify-between gap-2">
+      <div></div>
+      <div className="flex items-center gap-2 ">
         {!lgMediaMobile && <Notification />}
 
-        <Button
-          onClick={() => {
-            logout()
-            disconnectSocket()
-          }}
-          variant={'outline'}
-          className="flex h-[40px] lg:hidden items-center"
-        >
-          <LogOut className="size-5" />
-          Sair
-        </Button>
-      </div>
-      <div className="space-y-3">
-        <div className="flex items-center justify-center">
-          <div className="size-20 rounded-full relative group">
-            <Link
-              href={'/profile/edit'}
-              className="absolute left-0 rounded-full opacity-0 group-hover:opacity-100 transition-all right-0 cursor-pointer  bottom-0 top-0 bg-zinc-900/70 flex items-center justify-center"
+        <DropdownMenu>
+          <DropdownMenuTrigger className="overflow-hidden rounded-full">
+            <Avatar>
+              <AvatarImage src={user?.imageUrl} />
+              <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-[220px]">
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar>
+                  <AvatarImage src={user?.imageUrl} />
+                  <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-bold">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem asChild>
+              <Link
+                href={'/profile/edit'}
+                className="flex items-center cursor-pointer gap-2"
+              >
+                <Pen className="size-5" />
+                <p>Edit profile</p>
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => {
+                logout()
+                disconnectSocket()
+              }}
+              className="flex items-center cursor-pointer gap-2"
             >
-              <Pen className="size-7 text-white" weight="fill" />
-            </Link>
-
-            {!user && (
-              <div className="size-20 rounded-full bg-zinc-900/10 animate-pulse"></div>
-            )}
-
-            {user && (
-              <Image
-                width={80}
-                height={80}
-                src={user.imageUrl}
-                alt={user.name}
-                className="rounded-full object-cover"
-              />
-            )}
-
-            <div className="absolute top-[75%] left-[75%] size-5 bg-green-500 rounded-full"></div>
-          </div>
-        </div>
-        <h3 className="text-lg text-primary text-center font-semibold capitalize">
-          {user?.name}
-        </h3>
+              <LogOut className="size-5" />
+              <p>logout</p>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )

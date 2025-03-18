@@ -1,11 +1,11 @@
 import { getFriends } from '@/api/friends/get-friends'
 import { useQuery } from '@tanstack/react-query'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import { SearchFriend } from './search-friend'
 import { useSocket } from '@/context/users-socket'
 import clsx from 'clsx'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function ListFriends() {
   const { usersOnline } = useSocket()
@@ -34,43 +34,45 @@ export function ListFriends() {
 
           {data.friends.length <= 0 && (
             <p className="text-sm font-medium px-5  text-primary">
-              Amigos não encontrado.
+              Friends not found.
             </p>
           )}
 
-          {data?.friends.map((friend) => (
-            <Link
-              key={friend.id}
-              href={`/chats/${friend.chatId}`}
-              className={clsx(
-                'w-full hover:bg-neutral-300 transition-all flex items-center gap-2 py-2 px-5',
-                {
-                  'bg-neutral-300': chatId ? friend.chatId === chatId : null,
-                },
-              )}
-            >
-              <div className="size-12 rounded-full bg-primary relative">
-                <Image
-                  width={80}
-                  height={80}
-                  className="w-full h-full object-cover rounded-full"
-                  src={friend.imageUrl}
-                  alt={friend.name}
-                />
-                {usersOnline?.includes(friend.id) && (
-                  <div className="absolute top-[70%] left-[70%] size-4 bg-green-500 rounded-full"></div>
+          <div className="w-full px-5 mt-5">
+            {data?.friends.map((friend) => (
+              <Link
+                key={friend.id}
+                href={`/chats/${friend.chatId}`}
+                className={clsx(
+                  'w-full  transition-all hover:bg-primary/20 shadow-xl rounded-md  flex items-center gap-2 py-2 px-5',
+                  {
+                    'bg-primary/20': chatId ? friend.chatId === chatId : false,
+                    'bg-white': chatId ? friend.chatId !== chatId : false,
+                  },
                 )}
-              </div>
-              <div className="space-y-0.5">
-                <p className="text-sm capitalize text-primary font-bold">
-                  {friend.name}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {usersOnline?.includes(friend.id) ? 'online' : 'offline'}
-                </p>
-              </div>
-            </Link>
-          ))}
+              >
+                <div className="size-12 rounded-full bg-primary relative">
+                  <Avatar>
+                    <AvatarImage src={friend.imageUrl} alt={friend.name} />
+                    <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+                  </Avatar>
+
+                  {usersOnline?.includes(friend.id) && (
+                    <div className="absolute top-[70%] left-[70%] size-4 bg-green-500 rounded-full"></div>
+                  )}
+                </div>
+
+                <div className="space-y-0.5">
+                  <p className="text-base transition-all text-primary capitalize font-bold">
+                    {friend.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground transition-all  capitalize font-normal">
+                    {usersOnline?.includes(friend.id) ? 'online' : 'offline'}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </>

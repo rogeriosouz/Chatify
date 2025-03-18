@@ -43,7 +43,7 @@ export function MessageImage({ message }: MessageImageProps) {
                 },
               )}
             ></div>
-            <div className="relative overflow-hidden rounded transition-all">
+            <div className="relative overflow-hidden rounded-md transition-all">
               <Image
                 className="object-contain hover:scale-110 transition-all"
                 width={350}
@@ -52,7 +52,7 @@ export function MessageImage({ message }: MessageImageProps) {
                 alt={urlImage}
               />
 
-              <span className="text-white bg-zinc-900/40 rounded px-5 py-2 right-0 bottom-0 text-[11px] absolute font-medium">
+              <span className="text-white bg-zinc-900/40 rounded-md px-5 py-2 right-0 bottom-0 text-[11px] absolute font-medium">
                 {formatDate(message.createdAt)}
               </span>
             </div>
@@ -65,7 +65,7 @@ export function MessageImage({ message }: MessageImageProps) {
 
             <div className="relative">
               <Image
-                className="object-cover relative w-full rounded"
+                className="object-cover relative w-full rounded-md"
                 width={900}
                 height={490}
                 src={urlImage}
@@ -78,7 +78,7 @@ export function MessageImage({ message }: MessageImageProps) {
                     fileUrl: urlImage,
                   })
                 }}
-                className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-zinc-900/80  hover:opacity-70 transition-all rounded px-20 py-1 "
+                className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-zinc-900/80  hover:opacity-70 transition-all rounded-md px-20 py-1 "
               >
                 <DownloadSimple className="size-16 text-white" />
               </button>
@@ -92,7 +92,7 @@ export function MessageImage({ message }: MessageImageProps) {
         </Dialog>
 
         {message.message && (
-          <div className="p-2 bg-secondary rounded-b">
+          <div className="p-2 bg-secondary rounded-md-b">
             <CheckStringType str={message.message} />
           </div>
         )}

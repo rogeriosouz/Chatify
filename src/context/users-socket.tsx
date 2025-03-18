@@ -21,14 +21,17 @@ interface UsersSocketContextType {
         nameUser: string
         isImage: string | null | undefined
         isDocument: string | null | undefined
+        imageUserUrl: string
       }[]
     | null
   notificationAcceptedFriend: {
     nameUser: string
+    imageUserUrl: string
   } | null
   notificationNewFriendsRequest: {
     userId: string
     nameUser: string
+    imageUserUrl: string
   } | null
   newMessages: {
     id: string
@@ -62,6 +65,7 @@ interface UsersSocketContextType {
     isImage,
     isDocument,
     urlDocumentOrImage,
+    imageUserUrl,
   }: {
     recipientId: string
     message: string
@@ -70,6 +74,7 @@ interface UsersSocketContextType {
     isImage: string | null | undefined
     isDocument: string | null | undefined
     urlDocumentOrImage: string | null | undefined
+    imageUserUrl: string
   }) => void
 }
 
@@ -98,6 +103,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         nameUser: string
         isImage: string | null | undefined
         isDocument: string | null | undefined
+        imageUserUrl: string
       }[]
   >(null)
 
@@ -105,10 +111,12 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     useState<{
       userId: string
       nameUser: string
+      imageUserUrl: string
     } | null>(null)
 
   const [notificationAcceptedFriend, setNotificationAcceptedFriend] = useState<{
     nameUser: string
+    imageUserUrl: string
   } | null>(null)
 
   useEffect(() => {
@@ -139,6 +147,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     isImage,
     isDocument,
     urlDocumentOrImage,
+    imageUserUrl,
   }: {
     recipientId: string
     message: string
@@ -147,6 +156,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
     isImage: string | null | undefined
     isDocument: string | null | undefined
     urlDocumentOrImage: string | null | undefined
+    imageUserUrl: string
   }) {
     socket?.send(
       JSON.stringify({
@@ -158,6 +168,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         isImage,
         isDocument,
         urlDocumentOrImage,
+        imageUserUrl,
       }),
     )
   }
@@ -218,6 +229,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
         isImage: string | null | undefined
         isDocument: string | null | undefined
         urlDocumentOrImage: string | null | undefined
+        imageUserUrl: string | null | undefined
       }
 
       switch (data.action) {
@@ -247,6 +259,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
                       nameUser: data.nameUser as string,
                       isImage: data.isImage,
                       isDocument: data.isDocument,
+                      imageUserUrl: data.imageUserUrl as string,
                     },
                   ]
                 : [
@@ -255,6 +268,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
                       nameUser: data.nameUser as string,
                       isImage: data.isImage,
                       isDocument: data.isDocument,
+                      imageUserUrl: data.imageUserUrl as string,
                     },
                   ],
             )
@@ -266,6 +280,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
             setNotificationNewFriendsRequest({
               nameUser: data.nameUser as string,
               userId: data.userId,
+              imageUserUrl: data.imageUserUrl as string,
             })
 
             querryClient.invalidateQueries({
@@ -284,6 +299,7 @@ export function UsersSocketProvider({ children }: { children: ReactNode }) {
 
             setNotificationAcceptedFriend({
               nameUser: data.nameUser as string,
+              imageUserUrl: data.imageUserUrl as string,
             })
           }
           break

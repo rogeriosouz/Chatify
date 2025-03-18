@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { JwtResponse, useAuth } from '@/context/auth-context'
 import { api } from '@/lib/api'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Pen } from '@phosphor-icons/react'
+import { Pen, User } from '@phosphor-icons/react'
 import { ArrowLeft } from '@phosphor-icons/react/dist/ssr'
 import { useMutation } from '@tanstack/react-query'
 import { setCookie } from 'cookies-next'
@@ -19,6 +19,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { UpdatePassword } from './components/update-password'
+import { Toaster } from '@/components/ui/sonner'
 
 const schemaEditProfile = z.object({
   name: z.string().min(2).optional(),
@@ -79,8 +81,13 @@ export default function Edit() {
 
       updateUser(user)
 
-      toast.success('Usuario editado com sucesso', {
+      toast.success('User edited successfully', {
         className: '!w-[400px] !h-[70px] !bg-green-500 !text-black',
+      })
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message, {
+        className: '!w-[400px] !h-[70px] !bg-red-500 !text-white',
       })
     },
   })
@@ -102,6 +109,11 @@ export default function Edit() {
       setFile(null)
       updateUserMutation.mutate({
         imageUrl: fileUrl,
+      })
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message, {
+        className: '!w-[400px] !h-[70px] !bg-red-500 !text-white',
       })
     },
   })
@@ -135,7 +147,7 @@ export default function Edit() {
           className="absolute left-3 hover:text-primary/60 transition-all flex text-primary gap-2 items-center top-3"
         >
           <ArrowLeft className="size-7 " />
-          <p className="text-sm">Voltar</p>
+          <p className="text-sm">Back</p>
         </Link>
 
         <div className="w-full flex items-center justify-center">
@@ -175,8 +187,8 @@ export default function Edit() {
         <div className="text-center">
           {!user && (
             <>
-              <div className="w-[50px] mb-2 mt-5 mx-auto h-4 rounded bg-zinc-900/10 animate-pulse"></div>
-              <div className="w-[150px] mx-auto h-3 rounded bg-zinc-900/10 animate-pulse"></div>
+              <div className="w-[50px] mb-2 mt-5 mx-auto h-4 rounded-md bg-zinc-900/10 animate-pulse"></div>
+              <div className="w-[150px] mx-auto h-3 rounded-md bg-zinc-900/10 animate-pulse"></div>
             </>
           )}
 
@@ -190,19 +202,26 @@ export default function Edit() {
       </div>
 
       <div className="w-full xl:h-min  h-screen px-10 py-20">
-        <div className="w-[700px] xl:w-full">
-          <h2 className="text-2xl font-normal mb-10">Editar perfil</h2>
-          <form onSubmit={handleSubmit(handleEditProfile)} className="w-full">
+        <div className="w-[700px] xl:w-full ">
+          <div className="mb-10 flex items-center gap-2">
+            <User className="size-10 text-primary" weight="fill" />
+
+            <h2 className="text-xl font-medium">Update information user</h2>
+          </div>
+          <form
+            onSubmit={handleSubmit(handleEditProfile)}
+            className="w-full mb-20"
+          >
             {!user && (
-              <div className="w-full mt-2 h-[40px] mb-5 rounded bg-zinc-900/10 animate-pulse"></div>
+              <div className="w-full mt-2 h-[40px] mb-5 rounded-md bg-zinc-900/10 animate-pulse"></div>
             )}
 
             {user && (
               <label className="block space-y-0.5 mb-5">
-                <p>Nome</p>
+                <p>Name</p>
                 <Input
                   {...register('name')}
-                  placeholder="nome"
+                  placeholder="name"
                   className="w-full bg-transparent"
                 />
               </label>
@@ -221,11 +240,15 @@ export default function Edit() {
               {(isPendingUpdateUser || isPendingUpload) && (
                 <Loader2 className="size-5 animate-spin" />
               )}
-              Editar perfil
+              Update user
             </Button>
           </form>
+
+          <UpdatePassword />
         </div>
       </div>
+
+      <Toaster position="top-center" />
     </main>
   )
 }

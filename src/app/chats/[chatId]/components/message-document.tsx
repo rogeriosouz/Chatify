@@ -23,11 +23,11 @@ export function MessageDocument({ message }: MessageDocumentProps) {
       <div className="w-[200px] max-w-[200px]">
         <button
           onClick={() => downloadFile({ fileUrl: urlDocument })}
-          className="w-full relative group border-b bg-secondary h-[110px] rounded flex items-center justify-center"
+          className="w-full relative group border-b bg-secondary h-[110px] rounded-md flex items-center justify-center"
         >
           <File className="size-10 text-primary" weight="fill" />
 
-          <div className="absolute top-0 left-0 right-0 bottom-0 bg-zinc-900/70 rounded opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+          <div className="absolute top-0 left-0 right-0 bottom-0 bg-zinc-900/70 rounded-md opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
             <UploadSimple className="size-8 text-white" />
           </div>
 
@@ -41,7 +41,7 @@ export function MessageDocument({ message }: MessageDocumentProps) {
             )}
           ></div>
 
-          <div className="absolute bg-zinc-900/40 rounded px-2 py-1  bottom-0 right-0">
+          <div className="absolute bg-zinc-900/40 rounded-md px-2 py-1  bottom-0 right-0">
             <p className="text-[11px] font-medium text-white">
               {formatDate(message.createdAt)}
             </p>
@@ -49,7 +49,7 @@ export function MessageDocument({ message }: MessageDocumentProps) {
         </button>
 
         {message.message && (
-          <div className="p-2 bg-secondary rounded-b">
+          <div className="p-2 bg-secondary rounded-md-b">
             <CheckStringType str={message.message} />
           </div>
         )}

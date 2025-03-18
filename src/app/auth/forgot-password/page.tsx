@@ -5,7 +5,7 @@ import { FormForgotPassword } from './components/form-forgot-password'
 export default function ForgotPassword() {
   return (
     <div className="w-full max-h-screen px-9 ">
-      <h2 className="text-center mb-11 mt-8 font-bold text-xl">
+      <h2 className="text-center mb-11 mt-8 font-bold text-2xl">
         Forgot password
       </h2>
 

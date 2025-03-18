@@ -7,7 +7,6 @@ import {
   friendsRequest,
   FriendsRequesType,
 } from '@/api/friends/friends-request'
-import { Users } from '@phosphor-icons/react'
 import { AcceptFriend } from './accept-friend'
 import { RefuseFriend } from './refuse-friend'
 import { useCallback } from 'react'
@@ -62,14 +61,13 @@ export function Friends({ isMobile = false }: FriendsProps) {
     >
       <User />
 
-      <div className="p-5">
-        <div className="flex items-center gap-2">
-          <Users className="size-10 text-primary" weight="fill" />
-          <h2 className="text-base font-bold text-primary">Amigos</h2>
+      <div className="p-5 mt-10">
+        <div className="w--full justify-between flex items-center gap-2">
+          <h2 className="text-3xl font-bold text-primary">Friends</h2>
           <AddFriends />
         </div>
         <span className="text-xs text-muted-foreground">
-          Amigos online {friendsOnline() || 0}
+          Friends online {friendsOnline() || 0}
         </span>
       </div>
 
@@ -122,12 +120,12 @@ export function Friends({ isMobile = false }: FriendsProps) {
         <div>
           {dataFriendsRequest.friendsRequest.length >= 1 && (
             <>
-              <div className="px-5 mb-2">
+              <div className="px-5 mb-2 mt-5">
                 <h2 className="text-base font-bold text-primary">
-                  Pedidos de Amizades
+                  Friends request
                 </h2>
                 <span className="text-xs text-muted-foreground">
-                  Total de Pedidos de Amizades{' '}
+                  Total Friend Requests{' '}
                   {dataFriendsRequest.friendsRequest.length}
                 </span>
               </div>

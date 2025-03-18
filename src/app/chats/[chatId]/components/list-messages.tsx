@@ -30,19 +30,19 @@ export function ListMessages() {
     <>
       {statusQuerry === 'pending' && (
         <div className="w-full h-screen space-y-6 flex-grow p-10 lg:px-4 scroll-smooths overflow-auto">
-          <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+          <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
           <div className="w-full  flex items-center justify-end">
-            <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+            <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
           </div>
-          <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+          <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
           <div className="w-full  flex items-center justify-end">
-            <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+            <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
           </div>
-          <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+          <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
           <div className="w-full  flex items-center justify-end">
-            <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+            <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
           </div>
-          <div className="w-[100px] rounded h-7 bg-zinc-900/10 animate-pulse"></div>
+          <div className="w-[100px] rounded-md h-7 bg-zinc-900/10 animate-pulse"></div>
         </div>
       )}
 
@@ -57,7 +57,7 @@ export function ListMessages() {
                 new Date(message.createdAt).getDay() !==
                   new Date(data.messages[index - 1].createdAt).getDay()) && (
                 <div className="flex items-center my-10 justify-center">
-                  <span className="text-sm bg-secondary rounded px-4 py-0.5 font-normal">
+                  <span className="text-sm bg-secondary rounded-full px-4 py-0.5 font-normal">
                     {formatDateDay(message.createdAt)}
                   </span>
                 </div>

@@ -1,5 +1,6 @@
 import { addFriends } from '@/api/friends/add-friends'
 import { getUser } from '@/api/get-user'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DialogHeader,
@@ -10,7 +11,6 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/context/auth-context'
 import { useSocket } from '@/context/users-socket'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
@@ -38,13 +38,12 @@ export function AddFriends() {
   } = useForm<AddFriendsRequest>({
     resolver: zodResolver(schemaAddFriends),
   })
-  const { user } = useAuth()
   const { usersOnline, sendRequestFriend } = useSocket()
 
   const nameUser = watch('nameFriend')
 
   const getFriendMutation = useMutation<
-    { user: { id: string; name: string } },
+    { users: { id: string; name: string; imageUrl: string }[] },
     { response: { data: { message: string } } },
     { nameUser: string },
     unknown
@@ -57,7 +56,7 @@ export function AddFriends() {
       return data
     },
     onSuccess: () => {
-      toast.success('Usuario encontrado com sucesso', {
+      toast.success('User found successfully', {
         className: '!w-[400px] !h-[70px] border-none !bg-green-500 !text-black',
       })
     },
@@ -71,7 +70,7 @@ export function AddFriends() {
   const addFriendsMutation = useMutation<
     { message: string },
     { response: { data: { message: string } } },
-    { nameFriend: string },
+    { nameFriend: string; userId: string },
     unknown
   >({
     mutationFn: async ({ nameFriend }) => {
@@ -79,13 +78,11 @@ export function AddFriends() {
 
       return data
     },
-    onSuccess: ({ message }) => {
-      if (getFriendMutation.data && user) {
-        sendRequestFriend({
-          name: user.name,
-          recipientId: getFriendMutation.data.user.id,
-        })
-      }
+    onSuccess: ({ message }, { nameFriend, userId }) => {
+      sendRequestFriend({
+        name: nameFriend,
+        recipientId: userId,
+      })
 
       toast.success(message, {
         className: '!w-[400px] !h-[70px] !bg-green-500 !text-black',
@@ -101,12 +98,11 @@ export function AddFriends() {
     },
   })
 
-  function handleAddFriends() {
-    if (getFriendMutation.data) {
-      addFriendsMutation.mutate({
-        nameFriend: getFriendMutation.data?.user.name,
-      })
-    }
+  function handleAddFriends(nameUser: string, userId: string) {
+    addFriendsMutation.mutate({
+      nameFriend: nameUser,
+      userId,
+    })
   }
 
   function handleGetFriend() {
@@ -139,15 +135,15 @@ export function AddFriends() {
       onOpenChange={(value) => setOpenAddFriends(value)}
     >
       <DialogTrigger asChild>
-        <Button variant={'default'} size={'icon'}>
-          <Plus className="size5" />
-        </Button>
+        <button className="rounded-full size-10 hover:opacity-85 transition-all bg-primary flex items-center justify-center">
+          <Plus className="size-5 text-white" />
+        </button>
       </DialogTrigger>
-      <DialogContent className="rounded bg-secondary">
+      <DialogContent className="rounded-md bg-secondary">
         <DialogHeader className="text-left">
-          <DialogTitle className="text-xl">Adicionar amigo</DialogTitle>
+          <DialogTitle className="text-xl">Add friend</DialogTitle>
           <DialogDescription>
-            Para adicionar amigos, coloque o nome completo dele no campo abaixo.
+            To add friends, enter their full name in the field below.
           </DialogDescription>
         </DialogHeader>
 
@@ -157,39 +153,53 @@ export function AddFriends() {
         >
           <Input
             {...register('nameFriend')}
-            placeholder="Nome do usuário"
+            placeholder="Username"
             type="text"
           />
 
           {status === 'success' && (
             <div className="w-full transition-all justify-between flex items-center py-5">
-              <div className="flex items-center gap-2">
-                <div className="size-12 rounded-full bg-primary relative">
-                  {usersOnline?.includes(data?.user.id) && (
-                    <div className="absolute top-[70%] left-[70%] size-4 bg-green-500 rounded-full"></div>
-                  )}
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-sm capitalize text-primary font-bold">
-                    {data?.user.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {usersOnline?.includes(data?.user.id)
-                      ? 'online'
-                      : 'offline'}
-                  </p>
-                </div>
-              </div>
+              {data &&
+                data.users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between w-full bg-primary/10 p-3 rounded-md"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Avatar>
+                        <AvatarImage src={user.imageUrl} alt={user.name} />
+                        <AvatarFallback className="bg-zinc-900/10 animate-pulse"></AvatarFallback>
+                      </Avatar>
 
-              <div className="flex items-center gap-2">
-                <Button onClick={handleAddFriends} type="button" size={'icon'}>
-                  {isPending ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Send className="size-4" />
-                  )}
-                </Button>
-              </div>
+                      <div className="space-y-0.5">
+                        <p className="text-sm capitalize font-bold">
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {usersOnline?.includes(user.id)
+                            ? 'online'
+                            : 'offline'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => {
+                          handleAddFriends(user.name, user.id)
+                        }}
+                        type="button"
+                        size={'icon'}
+                      >
+                        {isPending ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Send className="size-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
             </div>
           )}
 
@@ -202,7 +212,7 @@ export function AddFriends() {
             {status === 'pending' && (
               <Loader2 className="size-4 animate-spin" />
             )}
-            Pesquisar amigo
+            Search friend
           </Button>
         </form>
       </DialogContent>
