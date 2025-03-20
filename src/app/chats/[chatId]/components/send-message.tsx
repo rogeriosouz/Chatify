@@ -103,7 +103,7 @@ export function SendMessage() {
         className="w-full flex items-center gap-2 p-4"
       >
         <div className="border shadow-xl focus-within:ring-1 focus-within:ring-primary h-[55px] bg-white px-2.5 rounded-full w-full flex items-center gap-0.5">
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <button className="rounded-full min-w-10 min-h-10 bg-primary flex items-center justify-center transition-all hover:opacity-85">
                 <Plus className="size-5 text-white" weight="bold" />

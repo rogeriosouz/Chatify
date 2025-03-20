@@ -31,7 +31,7 @@ export function MobileHeader() {
             className="flex h-[40px] items-center"
           >
             <LogOut className="size-5" />
-            Sair
+            logout
           </Button>
         </nav>
       </div>
