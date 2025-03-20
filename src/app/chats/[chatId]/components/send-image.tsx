@@ -176,76 +176,63 @@ export function SendImage() {
         onOpenChange={(value) => setOpenSendImage(value)}
       >
         <DialogTrigger className="hidden">Open</DialogTrigger>
-        <DialogContent>
+
+        <DialogContent className="bg-white  rounded-md w-[480px]">
           <DialogHeader>
             <DialogTitle></DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
 
-          <div className="w-full flex items-center justify-center flex-col">
+          <div className="flex flex-col items-center">
             {imagePreview && (
-              <div className="w-full relative h-[250px] border border-dashed py-5 flex items-center justify-center">
-                <label className="size-10 cursor-pointer hover:opacity-80 transition-all bg-primary flex items-center justify-center rounded-md absolute top-2 right-2">
-                  <Pencil
-                    className="size-5 text-white mx-auto absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
-                    weight="fill"
-                  />
-
+              <div className="relative w-full h-60 border border-dashed rounded-md overflow-hidden">
+                <label className="absolute top-2 right-2 bg-primary p-2 rounded-md cursor-pointer hover:opacity-80">
+                  <Pencil className="text-white size-4" weight="fill" />
                   <Input
                     ref={inputEditRef}
-                    disabled={
-                      isPendingUploadImage || isPendingSendImageMutation
-                    }
                     accept="image/*"
                     onChange={(e) => {
                       const fileTarget = e.target.files?.[0] as File
                       setFile(fileTarget)
-
-                      const objectUrl = URL.createObjectURL(fileTarget)
-                      setImagePreview(objectUrl)
+                      setImagePreview(URL.createObjectURL(fileTarget))
                     }}
                     type="file"
                     className="hidden"
                   />
                 </label>
-
                 <Image
-                  width={220}
-                  height={250}
+                  width={400}
+                  height={300}
                   src={imagePreview}
-                  className="rounded-md h-full object-fill"
-                  alt="image-preview"
+                  className="w-full h-full object-cover"
+                  alt="Image preview"
                 />
               </div>
             )}
 
             <form
               onSubmit={handleSubmit(handleSendImage)}
-              className="w-full mt-5"
+              className="w-full mt-5 space-y-3"
             >
-              <div className="space-y-3">
-                <label className="block space-y-0.5">
-                  <Input
-                    type="text"
-                    placeholder="Descrição da imagem"
-                    className="w-full"
-                    {...register('message')}
-                  />
-                </label>
+              <Input
+                type="text"
+                placeholder="Image description (optional)"
+                className="w-full bg-white rounded-md"
+                {...register('message')}
+              />
 
-                <Button
-                  disabled={isPendingUploadImage || isPendingSendImageMutation}
-                  type="submit"
-                  className="w-full"
-                >
-                  Enviar imagem{' '}
-                  {isPendingUploadImage || isPendingSendImageMutation ? (
-                    <Loader2 className="size-5 animate-spin" />
-                  ) : (
-                    <Send className="size-5" />
-                  )}
-                </Button>
-              </div>
+              <Button
+                disabled={isPendingUploadImage || isPendingSendImageMutation}
+                type="submit"
+                className="w-full text-white flex items-center justify-center gap-2 transition-all"
+              >
+                Send imagem
+                {isPendingUploadImage || isPendingSendImageMutation ? (
+                  <Loader2 className="size-5 animate-spin" />
+                ) : (
+                  <Send className="size-5" />
+                )}
+              </Button>
             </form>
           </div>
         </DialogContent>
